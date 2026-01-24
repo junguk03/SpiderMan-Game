@@ -293,6 +293,11 @@ function init() {
 function resizeCanvas() {
     canvas.width = window.innerWidth;
     canvas.height = window.innerHeight;
+
+    // Reload level if game is playing to adjust y positions
+    if (gameState === 'playing' && LEVELS[currentLevel]) {
+        loadLevel(currentLevel);
+    }
 }
 
 // ==================== GAME CONTROLS ====================
@@ -319,12 +324,18 @@ function nextLevel() {
 
 function loadLevel(num) {
     const level = LEVELS[num];
-    platforms = level.platforms.map(p => ({ ...p }));
-    walls = level.walls.map(w => ({ ...w }));
-    anchors = level.anchors.map(a => ({ ...a, radius: 18 }));
-    stars = level.stars.map(s => ({ ...s, collected: false, radius: 18 }));
-    door = { ...level.door, width: 50, height: 70, open: false };
-    spawnPoint = { ...level.spawn };
+
+    // Calculate y offset to position level at bottom of screen
+    const groundY = canvas.height - 150;
+    const baseY = 370; // Original base y in level data
+    const yOffset = groundY - baseY;
+
+    platforms = level.platforms.map(p => ({ ...p, y: p.y + yOffset }));
+    walls = level.walls.map(w => ({ ...w, y: w.y + yOffset }));
+    anchors = level.anchors.map(a => ({ ...a, y: a.y + yOffset, radius: 18 }));
+    stars = level.stars.map(s => ({ ...s, y: s.y + yOffset, collected: false, radius: 18 }));
+    door = { ...level.door, y: level.door.y + yOffset, width: 50, height: 70, open: false };
+    spawnPoint = { x: level.spawn.x, y: level.spawn.y + yOffset };
     totalStars = stars.length;
     collectedStars = 0;
 
