@@ -46,17 +46,21 @@ function init() {
     resizeCanvas();
     window.addEventListener('resize', resizeCanvas);
 
-    // Input Events
-    canvas.addEventListener('mousedown', handleInput);
-    canvas.addEventListener('mouseup', handleRelease);
-    canvas.addEventListener('touchstart', (e) => {
-        e.preventDefault();
-        handleInput(e.touches[0]);
-    });
-    canvas.addEventListener('touchend', (e) => {
-        e.preventDefault();
-        handleRelease();
-    });
+    // Input Events - document level for better responsiveness
+    document.addEventListener('mousedown', handleInput);
+    document.addEventListener('mouseup', handleRelease);
+    document.addEventListener('touchstart', (e) => {
+        if (gameState === 'playing') {
+            e.preventDefault();
+            handleInput(e.touches[0]);
+        }
+    }, { passive: false });
+    document.addEventListener('touchend', (e) => {
+        if (gameState === 'playing') {
+            e.preventDefault();
+            handleRelease();
+        }
+    }, { passive: false });
 
     // Button Events
     document.getElementById('start-btn').addEventListener('click', startGame);
@@ -129,18 +133,22 @@ function generateLevel(levelNum) {
 function handleInput(e) {
     if (gameState !== 'playing') return;
 
+    // Ignore clicks on buttons
+    if (e.target && e.target.tagName === 'BUTTON') return;
+
     if (!player.attached) {
-        // Find nearest anchor in range
+        // Find nearest anchor in range (no height restriction)
         let nearestAnchor = null;
         let nearestDist = Infinity;
-        const maxRange = 250;
+        const maxRange = 300;
 
         for (const anchor of anchors) {
             const dx = anchor.x - player.x;
             const dy = anchor.y - player.y;
             const dist = Math.sqrt(dx * dx + dy * dy);
 
-            if (dist < maxRange && dist < nearestDist && anchor.y < player.y) {
+            // Only check distance, allow any direction
+            if (dist < maxRange && dist < nearestDist) {
                 nearestDist = dist;
                 nearestAnchor = anchor;
             }
@@ -360,13 +368,13 @@ function drawRope(anchor, player) {
 }
 
 function drawAnchorRanges() {
-    const maxRange = 250;
+    const maxRange = 300;
     for (const anchor of anchors) {
         const dx = anchor.x - player.x;
         const dy = anchor.y - player.y;
         const dist = Math.sqrt(dx * dx + dy * dy);
 
-        if (dist < maxRange && anchor.y < player.y) {
+        if (dist < maxRange) {
             const alpha = 1 - (dist / maxRange);
             ctx.strokeStyle = `rgba(255, 215, 0, ${alpha * 0.3})`;
             ctx.lineWidth = 2;
@@ -469,60 +477,93 @@ function drawGoal(goal) {
 }
 
 function drawPlayer() {
+    const x = player.x;
+    const y = player.y;
+
+    // Calculate swing angle for limb animation
+    const speed = Math.sqrt(player.vx * player.vx + player.vy * player.vy);
+    const swingPhase = Date.now() * 0.01;
+    const limbSwing = Math.sin(swingPhase) * Math.min(speed * 0.05, 0.5);
+
+    // Body rotation based on velocity
+    const bodyAngle = Math.atan2(player.vy, player.vx) + Math.PI / 2;
+
+    ctx.save();
+    ctx.translate(x, y);
+    ctx.rotate(player.attached ? bodyAngle * 0.3 : bodyAngle * 0.5);
+
+    // Stickman dimensions
+    const headRadius = 10;
+    const bodyLength = 25;
+    const limbLength = 18;
+    const lineWidth = 4;
+
+    ctx.strokeStyle = '#ffd700';
+    ctx.fillStyle = '#ffd700';
+    ctx.lineWidth = lineWidth;
+    ctx.lineCap = 'round';
+    ctx.lineJoin = 'round';
+
+    // Glow effect
+    ctx.shadowColor = '#ffd700';
+    ctx.shadowBlur = 15;
+
+    // Head
+    ctx.beginPath();
+    ctx.arc(0, -bodyLength - headRadius, headRadius, 0, Math.PI * 2);
+    ctx.fill();
+
+    // Body
+    ctx.beginPath();
+    ctx.moveTo(0, -bodyLength);
+    ctx.lineTo(0, 0);
+    ctx.stroke();
+
+    // Arms
+    ctx.beginPath();
+    // Left arm
+    ctx.moveTo(0, -bodyLength + 5);
+    ctx.lineTo(-limbLength * Math.cos(0.5 + limbSwing), -bodyLength + 5 + limbLength * Math.sin(0.5 + limbSwing));
+    // Right arm
+    ctx.moveTo(0, -bodyLength + 5);
+    ctx.lineTo(limbLength * Math.cos(0.5 - limbSwing), -bodyLength + 5 + limbLength * Math.sin(0.5 - limbSwing));
+    ctx.stroke();
+
+    // Legs
+    ctx.beginPath();
+    // Left leg
+    ctx.moveTo(0, 0);
+    ctx.lineTo(-limbLength * Math.cos(0.3 - limbSwing), limbLength * Math.sin(0.3 + limbSwing) + 5);
+    // Right leg
+    ctx.moveTo(0, 0);
+    ctx.lineTo(limbLength * Math.cos(0.3 + limbSwing), limbLength * Math.sin(0.3 - limbSwing) + 5);
+    ctx.stroke();
+
+    // Eyes on head
+    ctx.shadowBlur = 0;
+    ctx.fillStyle = '#2d3436';
+    ctx.beginPath();
+    ctx.arc(-3, -bodyLength - headRadius, 2, 0, Math.PI * 2);
+    ctx.arc(3, -bodyLength - headRadius, 2, 0, Math.PI * 2);
+    ctx.fill();
+
+    ctx.restore();
+
     // Trail effect
-    const trailLength = 5;
-    for (let i = 0; i < trailLength; i++) {
-        const alpha = (1 - i / trailLength) * 0.3;
-        const offset = i * 3;
-        ctx.fillStyle = `rgba(255, 215, 0, ${alpha})`;
+    const trailLength = 4;
+    for (let i = 1; i <= trailLength; i++) {
+        const alpha = (1 - i / trailLength) * 0.2;
+        const offset = i * 4;
+        ctx.strokeStyle = `rgba(255, 215, 0, ${alpha})`;
+        ctx.lineWidth = 3;
         ctx.beginPath();
         ctx.arc(
-            player.x - player.vx * offset * 0.3,
-            player.y - player.vy * offset * 0.3,
-            CONFIG.playerRadius - i * 2,
-            0, Math.PI * 2
+            x - player.vx * offset * 0.2,
+            y - player.vy * offset * 0.2,
+            8, 0, Math.PI * 2
         );
-        ctx.fill();
+        ctx.stroke();
     }
-
-    // Main body glow
-    const gradient = ctx.createRadialGradient(
-        player.x, player.y, 0,
-        player.x, player.y, CONFIG.playerRadius * 1.5
-    );
-    gradient.addColorStop(0, 'rgba(255, 215, 0, 0.5)');
-    gradient.addColorStop(1, 'rgba(255, 215, 0, 0)');
-    ctx.fillStyle = gradient;
-    ctx.beginPath();
-    ctx.arc(player.x, player.y, CONFIG.playerRadius * 1.5, 0, Math.PI * 2);
-    ctx.fill();
-
-    // Main body
-    const bodyGradient = ctx.createRadialGradient(
-        player.x - 5, player.y - 5, 0,
-        player.x, player.y, CONFIG.playerRadius
-    );
-    bodyGradient.addColorStop(0, '#ffeaa7');
-    bodyGradient.addColorStop(1, '#fdcb6e');
-    ctx.fillStyle = bodyGradient;
-    ctx.beginPath();
-    ctx.arc(player.x, player.y, CONFIG.playerRadius, 0, Math.PI * 2);
-    ctx.fill();
-
-    // Face
-    ctx.fillStyle = '#2d3436';
-    // Eyes
-    ctx.beginPath();
-    ctx.arc(player.x - 5, player.y - 3, 3, 0, Math.PI * 2);
-    ctx.arc(player.x + 5, player.y - 3, 3, 0, Math.PI * 2);
-    ctx.fill();
-
-    // Smile
-    ctx.strokeStyle = '#2d3436';
-    ctx.lineWidth = 2;
-    ctx.beginPath();
-    ctx.arc(player.x, player.y + 2, 6, 0.1 * Math.PI, 0.9 * Math.PI);
-    ctx.stroke();
 }
 
 function drawInstructions() {
