@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Swing Hero</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div id="game-container">
+        <canvas id="gameCanvas"></canvas>
+
+        <div id="ui-overlay">
+            <div id="level-display">Level <span id="level-num">1</span></div>
+            <div id="score-display">Score: <span id="score">0</span></div>
+        </div>
+
+        <div id="start-screen" class="screen">
+            <h1>🕷️ Swing Hero</h1>
+            <p>클릭으로 줄을 걸고, 놓아서 날아가세요!</p>
+            <button id="start-btn" class="btn">게임 시작</button>
+        </div>
+
+        <div id="game-over-screen" class="screen hidden">
+            <h2>💀 Game Over</h2>
+            <p>Score: <span id="final-score">0</span></p>
+            <button id="retry-btn" class="btn">다시 시작</button>
+        </div>
+
+        <div id="level-complete-screen" class="screen hidden">
+            <h2>🎉 Level Complete!</h2>
+            <p>Level <span id="completed-level">1</span> 클리어!</p>
+            <button id="next-level-btn" class="btn">다음 레벨</button>
+        </div>
+    </div>
+
+    <script src="game.js"></script>
+</body>
+</html>
