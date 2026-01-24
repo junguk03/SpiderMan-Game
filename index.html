@@ -1,8 +1,8 @@
-<!DOCTYPE html>ㅈ
+<!DOCTYPE html>
 <html lang="ko">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
     <title>Swing Hero</title>
     <link rel="stylesheet" href="style.css">
 </head>
@@ -12,42 +12,24 @@
 
         <div id="ui-overlay">
             <div id="level-display">Level <span id="level-num">1</span></div>
-            <div id="score-display">Stars: <span id="score">0/0</span></div>
+            <div id="score-display">Stars <span id="score">0/0</span></div>
         </div>
 
         <div id="start-screen" class="screen">
             <h1>Swing Hero</h1>
-            <div class="tutorial">
-                <div class="tutorial-item">
-                    <span class="tutorial-icon">move</span>
-                    <span class="tutorial-text">A / D - 좌우 이동</span>
-                </div>
-                <div class="tutorial-item">
-                    <span class="tutorial-icon">jump</span>
-                    <span class="tutorial-text">Space - 점프 / 벽 점프</span>
-                </div>
-                <div class="tutorial-item">
-                    <span class="tutorial-icon">grapple</span>
-                    <span class="tutorial-text">마우스 클릭 - 줄 발사 (유지하면 매달림)</span>
-                </div>
-                <div class="tutorial-item">
-                    <span class="tutorial-icon">goal</span>
-                    <span class="tutorial-text">별을 모아 문을 열고 탈출!</span>
-                </div>
-            </div>
-            <button id="start-btn" class="btn">게임 시작</button>
+            <button id="start-btn" class="btn">PLAY</button>
         </div>
 
         <div id="game-over-screen" class="screen hidden">
-            <h2>💀 Game Over</h2>
-            <p>Score: <span id="final-score">0</span></p>
-            <button id="retry-btn" class="btn">다시 시작</button>
+            <h2>Game Over</h2>
+            <p>Level <span id="final-score">1</span></p>
+            <button id="retry-btn" class="btn">Retry</button>
         </div>
 
         <div id="level-complete-screen" class="screen hidden">
-            <h2>🎉 Level Complete!</h2>
-            <p>Level <span id="completed-level">1</span> 클리어!</p>
-            <button id="next-level-btn" class="btn">다음 레벨</button>
+            <h2>Level Complete!</h2>
+            <p>Level <span id="completed-level">1</span></p>
+            <button id="next-level-btn" class="btn">Next Level</button>
         </div>
     </div>
 
