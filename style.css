@@ -167,7 +167,7 @@ body {
 }
 
 .tutorial-item:nth-child(1) .tutorial-icon::before {
-    content: "👆";
+    content: "🏃";
 }
 
 .tutorial-item:nth-child(2) .tutorial-icon {
@@ -175,7 +175,7 @@ body {
 }
 
 .tutorial-item:nth-child(2) .tutorial-icon::before {
-    content: "🚀";
+    content: "⬆️";
 }
 
 .tutorial-item:nth-child(3) .tutorial-icon {
@@ -183,15 +183,15 @@ body {
 }
 
 .tutorial-item:nth-child(3) .tutorial-icon::before {
-    content: "⭐";
+    content: "🕸️";
 }
 
 .tutorial-item:nth-child(4) .tutorial-icon {
-    background: linear-gradient(135deg, #fa709a, #fee140);
+    background: linear-gradient(135deg, #2ecc71, #27ae60);
 }
 
 .tutorial-item:nth-child(4) .tutorial-icon::before {
-    content: "⚠️";
+    content: "⭐";
 }
 
 .tutorial-text {
