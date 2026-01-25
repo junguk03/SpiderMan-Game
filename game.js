@@ -10,7 +10,8 @@ const CONFIG = {
     wallSlideSpeed: 2,
     wallJumpForce: { x: 10, y: -11 },
     ropeSpeed: 30,
-    swingForce: 0.6,
+    swingForce: 0.35,
+    swingDamping: 0.98,
     maxRopeLength: 350
 };
 
@@ -128,8 +129,8 @@ function createLevels() {
             { x: 280, y: 270, w: 20, h: 200 },
             { x: 460, y: 270, w: 20, h: 200 }
         ],
-        anchors: [],
-        stars: [{ x: 370, y: 370 }, { x: 370, y: 220 }],
+        anchors: [{ x: 370, y: 150 }],
+        stars: [{ x: 370, y: 320 }, { x: 520, y: 420 }],
         door: { x: 650, y: 410 }
     });
 
@@ -382,8 +383,9 @@ function shootGrapple() {
 
 function releaseGrapple() {
     if (grapple.attached) {
-        player.vx *= 1.3;
-        player.vy *= 1.3;
+        // Gentle momentum boost on release
+        player.vx *= 1.1;
+        player.vy *= 1.1;
     }
     grapple.active = false;
     grapple.attached = false;
@@ -445,10 +447,12 @@ function updatePhysics() {
             player.vx *= player.onGround ? CONFIG.friction : CONFIG.airResistance;
         }
     } else {
-        // Swing
+        // Swing (pendulum style)
         const dx = player.x + player.width / 2 - grapple.anchorX;
         const dy = player.y - grapple.anchorY;
         const angle = Math.atan2(dy, dx);
+
+        // Apply swing force with damping
         if (keys.left) {
             player.vx -= Math.cos(angle + Math.PI / 2) * CONFIG.swingForce;
             player.vy -= Math.sin(angle + Math.PI / 2) * CONFIG.swingForce;
@@ -459,6 +463,10 @@ function updatePhysics() {
             player.vy += Math.sin(angle + Math.PI / 2) * CONFIG.swingForce;
             tutorialActions.swung = true;
         }
+
+        // Apply damping for smoother swing
+        player.vx *= CONFIG.swingDamping;
+        player.vy *= CONFIG.swingDamping;
     }
 
     // Gravity
@@ -486,10 +494,22 @@ function updatePhysics() {
     }
     if (player.wallJumpCooldown > 0) player.wallJumpCooldown--;
 
-    // Grapple constraint
+    // Grapple constraint (pendulum - 180 degree limit)
     if (grapple.attached) {
-        const dx = player.x + player.width / 2 - grapple.anchorX;
-        const dy = player.y - grapple.anchorY;
+        let dx = player.x + player.width / 2 - grapple.anchorX;
+        let dy = player.y - grapple.anchorY;
+
+        // Limit to 180 degrees (can't go above anchor)
+        if (dy < 0) {
+            player.y = grapple.anchorY;
+            if (player.vy < 0) {
+                // Convert upward velocity to horizontal (swing momentum)
+                player.vx += (player.vy * -0.5) * Math.sign(dx);
+                player.vy = 0;
+            }
+            dy = 0;
+        }
+
         const dist = Math.sqrt(dx * dx + dy * dy);
         if (dist > grapple.ropeLength) {
             const angle = Math.atan2(dy, dx);
@@ -545,20 +565,44 @@ function checkCollisions() {
                 player.y = plat.y - player.height;
                 player.vy = 0;
                 player.onGround = true;
+                // Release grapple when landing on platform
+                if (grapple.attached) {
+                    grapple.active = false;
+                    grapple.attached = false;
+                }
             }
         }
     }
 
     for (const wall of walls) {
         if (player.y + player.height > wall.y && player.y < wall.y + wall.h) {
+            // Right side of player hits left side of wall
             if (player.x + player.width > wall.x && player.x + player.width < wall.x + wall.w + 5) {
                 player.x = wall.x - player.width;
                 player.vx = 0;
                 player.onWall = 1;
-            } else if (player.x < wall.x + wall.w && player.x > wall.x - 5) {
+                // Shorten rope if grapple attached to prevent pulling through
+                if (grapple.attached) {
+                    const newDist = Math.sqrt(
+                        Math.pow(player.x + player.width / 2 - grapple.anchorX, 2) +
+                        Math.pow(player.y - grapple.anchorY, 2)
+                    );
+                    grapple.ropeLength = Math.min(grapple.ropeLength, newDist);
+                }
+            }
+            // Left side of player hits right side of wall
+            else if (player.x < wall.x + wall.w && player.x > wall.x - 5) {
                 player.x = wall.x + wall.w;
                 player.vx = 0;
                 player.onWall = -1;
+                // Shorten rope if grapple attached to prevent pulling through
+                if (grapple.attached) {
+                    const newDist = Math.sqrt(
+                        Math.pow(player.x + player.width / 2 - grapple.anchorX, 2) +
+                        Math.pow(player.y - grapple.anchorY, 2)
+                    );
+                    grapple.ropeLength = Math.min(grapple.ropeLength, newDist);
+                }
             }
         }
     }
