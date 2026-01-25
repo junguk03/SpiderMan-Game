@@ -102,6 +102,16 @@ body {
     line-height: 1.6;
 }
 
+.warning-hint {
+    background: rgba(255, 193, 7, 0.2);
+    border: 1px solid rgba(255, 193, 7, 0.4);
+    padding: 10px 20px;
+    border-radius: 10px;
+    font-size: 14px !important;
+    color: #ffc107 !important;
+    max-width: 350px !important;
+}
+
 .btn {
     background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
     border: none;

@@ -43,6 +43,7 @@ let grapple = {
 };
 
 let platforms = [], walls = [], anchors = [], stars = [];
+let buttons = []; // 버튼 배열 추가
 let door = null;
 let spawnPoint = { x: 0, y: 0 };
 let camera = { x: 0, y: 0 };
@@ -158,8 +159,117 @@ function createLevels() {
         door: { x: 850, y: 310 }
     });
 
-    // Generate levels 6-100
-    for (let i = 6; i <= 100; i++) {
+    // Level 6
+    levels.push({
+        name: 'Level 6',
+        spawn: { x: 50, y: 320 },
+        platforms: [
+            { x: 0, y: 370, w: 100, h: 30 },
+            { x: 250, y: 350, w: 100, h: 30 },
+            { x: 500, y: 320, w: 100, h: 30 },
+            { x: 750, y: 370, w: 150, h: 30 }
+        ],
+        walls: [
+            { x: 400, y: 200, w: 20, h: 120 }
+        ],
+        anchors: [{ x: 180, y: 150 }, { x: 620, y: 120 }],
+        stars: [{ x: 300, y: 280 }, { x: 550, y: 250 }],
+        door: { x: 820, y: 310 }
+    });
+
+    // Level 7
+    levels.push({
+        name: 'Level 7',
+        spawn: { x: 50, y: 320 },
+        platforms: [
+            { x: 0, y: 370, w: 100, h: 30 },
+            { x: 350, y: 400, w: 100, h: 30 },
+            { x: 600, y: 350, w: 100, h: 30 },
+            { x: 850, y: 370, w: 150, h: 30 }
+        ],
+        walls: [
+            { x: 200, y: 200, w: 20, h: 170 },
+            { x: 280, y: 200, w: 20, h: 170 }
+        ],
+        anchors: [{ x: 450, y: 150 }, { x: 720, y: 130 }],
+        stars: [{ x: 240, y: 250 }, { x: 500, y: 200 }, { x: 720, y: 200 }],
+        door: { x: 920, y: 310 }
+    });
+
+    // Level 8
+    levels.push({
+        name: 'Level 8',
+        spawn: { x: 50, y: 320 },
+        platforms: [
+            { x: 0, y: 370, w: 100, h: 30 },
+            { x: 300, y: 320, w: 80, h: 30 },
+            { x: 550, y: 280, w: 80, h: 30 },
+            { x: 800, y: 320, w: 80, h: 30 },
+            { x: 1000, y: 370, w: 150, h: 30 }
+        ],
+        walls: [],
+        anchors: [{ x: 180, y: 100 }, { x: 420, y: 80 }, { x: 680, y: 80 }, { x: 900, y: 100 }],
+        stars: [{ x: 300, y: 150 }, { x: 550, y: 130 }, { x: 800, y: 150 }],
+        door: { x: 1070, y: 310 }
+    });
+
+    // Level 9
+    levels.push({
+        name: 'Level 9',
+        spawn: { x: 50, y: 320 },
+        platforms: [
+            { x: 0, y: 370, w: 100, h: 30 },
+            { x: 250, y: 370, w: 60, h: 30 },
+            { x: 450, y: 350, w: 60, h: 30 },
+            { x: 650, y: 320, w: 60, h: 30 },
+            { x: 850, y: 370, w: 150, h: 30 }
+        ],
+        walls: [
+            { x: 350, y: 150, w: 20, h: 200 },
+            { x: 550, y: 100, w: 20, h: 220 },
+            { x: 750, y: 150, w: 20, h: 170 }
+        ],
+        anchors: [{ x: 160, y: 150 }, { x: 400, y: 80 }, { x: 600, y: 60 }, { x: 800, y: 100 }],
+        stars: [{ x: 280, y: 280 }, { x: 480, y: 250 }, { x: 680, y: 220 }],
+        door: { x: 920, y: 310 }
+    });
+
+    // Level 10 - 버튼 시스템 도입!
+    levels.push({
+        name: 'Level 10',
+        spawn: { x: 50, y: 320 },
+        platforms: [
+            { x: 0, y: 370, w: 120, h: 30 },           // 시작 플랫폼
+            { x: 250, y: 350, w: 100, h: 30 },         // 첫 번째 버튼 플랫폼
+            { x: 500, y: 320, w: 100, h: 30 },         // 중간 플랫폼
+            { x: 750, y: 280, w: 100, h: 30 },         // 두 번째 버튼 플랫폼
+            { x: 1000, y: 370, w: 180, h: 30 }         // 도착 플랫폼
+        ],
+        walls: [
+            { x: 440, y: 200, w: 20, h: 120 },         // 첫 번째 별 옆 벽
+            { x: 690, y: 150, w: 20, h: 130 }          // 두 번째 별 옆 벽
+        ],
+        anchors: [
+            { x: 180, y: 180 },                        // 첫 번째 줄 앵커
+            { x: 380, y: 150 },                        // 두 번째 줄 앵커
+            { x: 620, y: 120 },                        // 세 번째 줄 앵커
+            { x: 880, y: 150 }                         // 네 번째 줄 앵커
+        ],
+        stars: [
+            { x: 440, y: 250, active: false, buttonId: 0 },  // 첫 번째 비활성 별
+            { x: 690, y: 200, active: false, buttonId: 1 }   // 두 번째 비활성 별
+        ],
+        buttons: [
+            { x: 280, y: 335, targetStarIndex: 0 },    // 첫 번째 버튼 (플랫폼 y:350 - 15)
+            { x: 780, y: 265, targetStarIndex: 1 }     // 두 번째 버튼 (플랫폼 y:280 - 15)
+        ],
+        door: { x: 1100, y: 310 },
+        isButtonLevel: true,
+        tutorial: '버튼을 밟아 별을 활성화하세요!'
+    });
+
+    // Generate levels 11-100
+    for (let i = 11; i <= 100; i++) {
         levels.push(generateLevel(i));
     }
 
@@ -330,7 +440,27 @@ function loadLevel(num) {
     platforms = level.platforms.map(p => ({ ...p, y: p.y + yOffset }));
     walls = level.walls.map(w => ({ ...w, y: w.y + yOffset }));
     anchors = level.anchors.map(a => ({ ...a, y: a.y + yOffset, radius: 18 }));
-    stars = level.stars.map(s => ({ ...s, y: s.y + yOffset, collected: false, radius: 18 }));
+    stars = level.stars.map(s => ({
+        ...s,
+        y: s.y + yOffset,
+        collected: false,
+        radius: 18,
+        active: s.active !== false // 기본값은 true, 명시적으로 false인 경우만 비활성화
+    }));
+
+    // 버튼 로드
+    if (level.buttons) {
+        buttons = level.buttons.map(b => ({
+            ...b,
+            y: b.y + yOffset,
+            width: 40,
+            height: 15,
+            pressed: false
+        }));
+    } else {
+        buttons = [];
+    }
+
     door = { ...level.door, y: level.door.y + yOffset, width: 50, height: 70, open: false };
     spawnPoint = { x: level.spawn.x, y: level.spawn.y + yOffset };
     totalStars = stars.length;
@@ -448,15 +578,13 @@ function updatePhysics() {
         const dy = player.y - grapple.anchorY;
         const angle = Math.atan2(dy, dx);
 
-        // Apply swing force with damping
+        // Apply swing force with damping (A=왼쪽, D=오른쪽)
         if (keys.left) {
-            player.vx -= Math.cos(angle + Math.PI / 2) * CONFIG.swingForce;
-            player.vy -= Math.sin(angle + Math.PI / 2) * CONFIG.swingForce;
+            player.vx -= CONFIG.swingForce * 1.5;
             tutorialActions.swung = true;
         }
         if (keys.right) {
-            player.vx += Math.cos(angle + Math.PI / 2) * CONFIG.swingForce;
-            player.vy += Math.sin(angle + Math.PI / 2) * CONFIG.swingForce;
+            player.vx += CONFIG.swingForce * 1.5;
             tutorialActions.swung = true;
         }
 
@@ -529,9 +657,27 @@ function updatePhysics() {
     // Death
     if (player.y > canvas.height + 100) gameOver();
 
-    // Stars
+    // Buttons - 버튼 충돌 감지 및 별 활성화
+    for (const button of buttons) {
+        if (button.pressed) continue;
+        // 플레이어가 버튼 위에 있는지 확인
+        if (player.x + player.width > button.x &&
+            player.x < button.x + button.width &&
+            player.y + player.height >= button.y &&
+            player.y + player.height <= button.y + button.height + 10 &&
+            player.onGround) {
+            button.pressed = true;
+            // 연결된 별 활성화
+            if (button.targetStarIndex !== undefined && stars[button.targetStarIndex]) {
+                stars[button.targetStarIndex].active = true;
+            }
+        }
+    }
+
+    // Stars - active 상태인 별만 수집 가능
     for (const star of stars) {
         if (star.collected) continue;
+        if (!star.active) continue; // 비활성화된 별은 수집 불가
         const dx = (player.x + player.width / 2) - star.x;
         const dy = (player.y + player.height / 2) - star.y;
         if (Math.sqrt(dx * dx + dy * dy) < star.radius + 20) {
@@ -657,14 +803,33 @@ function render() {
         ctx.fill();
     }
 
-    // Stars
+    // Buttons - 버튼 렌더링
+    for (const btn of buttons) {
+        ctx.save();
+        if (btn.pressed) {
+            // 눌린 버튼 - 납작하게
+            ctx.fillStyle = '#27ae60';
+            ctx.fillRect(btn.x, btn.y + 10, btn.width, 5);
+        } else {
+            // 안 눌린 버튼 - 튀어나온 형태
+            ctx.fillStyle = '#e74c3c';
+            ctx.shadowColor = '#e74c3c';
+            ctx.shadowBlur = 10;
+            ctx.fillRect(btn.x, btn.y, btn.width, btn.height);
+            // 버튼 위 하이라이트
+            ctx.fillStyle = '#ff6b6b';
+            ctx.fillRect(btn.x + 2, btn.y + 2, btn.width - 4, 4);
+        }
+        ctx.restore();
+    }
+
+    // Stars - 활성화/비활성화 상태에 따라 다르게 렌더링
     for (const s of stars) {
         if (s.collected) continue;
         ctx.save();
         ctx.translate(s.x, s.y);
-        ctx.fillStyle = '#ffd700';
-        ctx.shadowColor = '#ffd700';
-        ctx.shadowBlur = 15;
+
+        // 별 모양 경로 생성
         ctx.beginPath();
         for (let i = 0; i < 10; i++) {
             const angle = (i * Math.PI) / 5 - Math.PI / 2;
@@ -673,7 +838,21 @@ function render() {
             else ctx.lineTo(Math.cos(angle) * r, Math.sin(angle) * r);
         }
         ctx.closePath();
-        ctx.fill();
+
+        if (s.active) {
+            // 활성화된 별 - 채워진 금색
+            ctx.fillStyle = '#ffd700';
+            ctx.shadowColor = '#ffd700';
+            ctx.shadowBlur = 15;
+            ctx.fill();
+        } else {
+            // 비활성화된 별 - 윤곽선만 (회색 투명)
+            ctx.strokeStyle = 'rgba(150, 150, 150, 0.5)';
+            ctx.lineWidth = 2;
+            ctx.setLineDash([5, 3]); // 점선
+            ctx.stroke();
+            ctx.setLineDash([]); // 점선 해제
+        }
         ctx.restore();
     }
 
@@ -708,6 +887,9 @@ function render() {
 
     // Tutorial overlay
     if (LEVELS[currentLevel]?.isTutorial) drawTutorial();
+
+    // Button level tutorial - 버튼 레벨 안내
+    if (LEVELS[currentLevel]?.isButtonLevel) drawButtonTutorial();
 }
 
 function drawPlayer() {
@@ -784,6 +966,35 @@ function drawTutorial() {
     ctx.fillText(msg, canvas.width / 2, 52);
 }
 
+function drawButtonTutorial() {
+    // 모든 버튼이 눌렸는지 확인
+    const allButtonsPressed = buttons.every(b => b.pressed);
+    // 모든 별이 활성화됐는지 확인
+    const allStarsActive = stars.every(s => s.active);
+
+    let msg = '';
+    if (!allButtonsPressed) {
+        msg = '🔴 빨간 버튼을 밟아 별을 활성화하세요!';
+    } else if (!allStarsActive) {
+        msg = '⭐ 별이 활성화되었습니다! 별을 모으세요!';
+    } else if (collectedStars < totalStars) {
+        msg = '⭐ 활성화된 별을 모두 모으세요!';
+    } else {
+        msg = '🚪 모든 별을 모았습니다! 문으로 이동하세요!';
+    }
+
+    ctx.fillStyle = 'rgba(0, 0, 0, 0.7)';
+    const w = 450, h = 50;
+    ctx.fillRect(canvas.width / 2 - w / 2, 20, w, h);
+    ctx.strokeStyle = '#e74c3c';
+    ctx.lineWidth = 2;
+    ctx.strokeRect(canvas.width / 2 - w / 2, 20, w, h);
+    ctx.fillStyle = '#fff';
+    ctx.font = '20px Segoe UI';
+    ctx.textAlign = 'center';
+    ctx.fillText(msg, canvas.width / 2, 52);
+}
+
 // ==================== GAME STATE ====================
 function gameOver() {
     gameState = 'gameOver';
@@ -798,7 +1009,9 @@ function levelComplete() {
 }
 
 function updateUI() {
-    document.getElementById('level-num').textContent = LEVELS[currentLevel]?.name || `Level ${currentLevel}`;
+    // 레벨 번호만 표시 (Tutorial은 0, 나머지는 1부터 시작하는 번호)
+    const levelDisplay = currentLevel === 0 ? 'Tutorial' : currentLevel;
+    document.getElementById('level-num').textContent = levelDisplay;
     document.getElementById('score').textContent = `${collectedStars}/${totalStars}`;
 }
 
@@ -810,3 +1023,15 @@ function gameLoop() {
 }
 
 document.addEventListener('DOMContentLoaded', init);
+
+// ==================== REFRESH WARNING ====================
+// 게임 진행 중 새로고침 시 경고 메시지 표시
+window.addEventListener('beforeunload', function(e) {
+    // 게임이 시작 화면이 아닌 경우에만 경고 표시
+    if (gameState === 'playing' || gameState === 'levelComplete') {
+        e.preventDefault();
+        // 표준 방식으로 경고 메시지 설정
+        e.returnValue = '게임 진행 상황이 초기화됩니다. 정말 나가시겠습니까?';
+        return e.returnValue;
+    }
+});
