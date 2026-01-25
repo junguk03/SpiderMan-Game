@@ -832,29 +832,36 @@ function checkCollisions() {
     player.onGround = false;
     player.onWall = 0;
 
+    // 플랫폼 충돌 (위에서 착지 + 아래에서 머리 부딪힘)
     for (const plat of platforms) {
         if (player.x + player.width > plat.x && player.x < plat.x + plat.w) {
+            // 위에서 착지 (기존)
             if (player.vy >= 0 && player.y + player.height > plat.y && player.y + player.height < plat.y + plat.h + 10) {
                 player.y = plat.y - player.height;
                 player.vy = 0;
                 player.onGround = true;
-                // Release grapple when landing on platform
                 if (grapple.attached) {
                     grapple.active = false;
                     grapple.attached = false;
                 }
             }
+            // 아래에서 머리 부딪힘 (새로 추가)
+            else if (player.vy < 0 && player.y < plat.y + plat.h && player.y > plat.y) {
+                player.y = plat.y + plat.h;
+                player.vy = 0;
+            }
         }
     }
 
+    // 벽 충돌 (좌우 + 상하)
     for (const wall of walls) {
+        // 수평 충돌 (좌우)
         if (player.y + player.height > wall.y && player.y < wall.y + wall.h) {
-            // Right side of player hits left side of wall
-            if (player.x + player.width > wall.x && player.x + player.width < wall.x + wall.w + 5) {
+            // 오른쪽에서 벽 왼쪽에 부딪힘
+            if (player.x + player.width > wall.x && player.x + player.width < wall.x + wall.w / 2 + 10) {
                 player.x = wall.x - player.width;
                 player.vx = 0;
                 player.onWall = 1;
-                // Shorten rope if grapple attached to prevent pulling through
                 if (grapple.attached) {
                     const newDist = Math.sqrt(
                         Math.pow(player.x + player.width / 2 - grapple.anchorX, 2) +
@@ -863,12 +870,11 @@ function checkCollisions() {
                     grapple.ropeLength = Math.min(grapple.ropeLength, newDist);
                 }
             }
-            // Left side of player hits right side of wall
-            else if (player.x < wall.x + wall.w && player.x > wall.x - 5) {
+            // 왼쪽에서 벽 오른쪽에 부딪힘
+            else if (player.x < wall.x + wall.w && player.x > wall.x + wall.w / 2 - 10) {
                 player.x = wall.x + wall.w;
                 player.vx = 0;
                 player.onWall = -1;
-                // Shorten rope if grapple attached to prevent pulling through
                 if (grapple.attached) {
                     const newDist = Math.sqrt(
                         Math.pow(player.x + player.width / 2 - grapple.anchorX, 2) +
@@ -876,6 +882,21 @@ function checkCollisions() {
                     );
                     grapple.ropeLength = Math.min(grapple.ropeLength, newDist);
                 }
+            }
+        }
+
+        // 수직 충돌 (상하) - 벽 위/아래로 통과 방지
+        if (player.x + player.width > wall.x && player.x < wall.x + wall.w) {
+            // 아래에서 벽 바닥에 부딪힘
+            if (player.vy < 0 && player.y < wall.y + wall.h && player.y > wall.y + wall.h - 20) {
+                player.y = wall.y + wall.h;
+                player.vy = 0;
+            }
+            // 위에서 벽 위에 착지
+            else if (player.vy >= 0 && player.y + player.height > wall.y && player.y + player.height < wall.y + 20) {
+                player.y = wall.y - player.height;
+                player.vy = 0;
+                player.onGround = true;
             }
         }
     }
