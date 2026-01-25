@@ -159,79 +159,70 @@ function createLevels() {
         door: { x: 850, y: 310 }
     });
 
-    // Level 6
+    // Level 6 - 첫 스윙 레벨
     levels.push({
         name: 'Level 6',
         spawn: { x: 50, y: 320 },
         platforms: [
-            { x: 0, y: 370, w: 100, h: 30 },
-            { x: 250, y: 350, w: 100, h: 30 },
-            { x: 500, y: 320, w: 100, h: 30 },
-            { x: 750, y: 370, w: 150, h: 30 }
+            { x: 0, y: 370, w: 100, h: 30 },           // 시작
+            { x: 400, y: 370, w: 100, h: 30 },         // 중간
+            { x: 800, y: 370, w: 150, h: 30 }          // 도착
         ],
-        walls: [
-            { x: 400, y: 200, w: 20, h: 120 }
-        ],
-        anchors: [{ x: 180, y: 150 }, { x: 620, y: 120 }],
-        stars: [{ x: 300, y: 280 }, { x: 550, y: 250 }],
-        door: { x: 820, y: 310 }
+        walls: [],
+        anchors: [{ x: 250, y: 120 }, { x: 600, y: 100 }],
+        stars: [{ x: 250, y: 200 }, { x: 600, y: 180 }],
+        door: { x: 880, y: 310 }
     });
 
-    // Level 7
+    // Level 7 - 벽타기 소개
     levels.push({
         name: 'Level 7',
         spawn: { x: 50, y: 320 },
         platforms: [
-            { x: 0, y: 370, w: 100, h: 30 },
-            { x: 350, y: 400, w: 100, h: 30 },
-            { x: 600, y: 350, w: 100, h: 30 },
-            { x: 850, y: 370, w: 150, h: 30 }
+            { x: 0, y: 370, w: 100, h: 30 },           // 시작
+            { x: 500, y: 370, w: 100, h: 30 },         // 중간
+            { x: 950, y: 370, w: 150, h: 30 }          // 도착
         ],
         walls: [
-            { x: 200, y: 200, w: 20, h: 170 },
-            { x: 280, y: 200, w: 20, h: 170 }
+            { x: 200, y: 180, w: 20, h: 190 },
+            { x: 280, y: 180, w: 20, h: 190 }
         ],
-        anchors: [{ x: 450, y: 150 }, { x: 720, y: 130 }],
-        stars: [{ x: 240, y: 250 }, { x: 500, y: 200 }, { x: 720, y: 200 }],
-        door: { x: 920, y: 310 }
+        anchors: [{ x: 400, y: 100 }, { x: 720, y: 80 }],
+        stars: [{ x: 240, y: 260 }, { x: 550, y: 150 }, { x: 720, y: 130 }],
+        door: { x: 1030, y: 310 }
     });
 
-    // Level 8
+    // Level 8 - 연속 스윙
     levels.push({
         name: 'Level 8',
         spawn: { x: 50, y: 320 },
         platforms: [
-            { x: 0, y: 370, w: 100, h: 30 },
-            { x: 300, y: 320, w: 80, h: 30 },
-            { x: 550, y: 280, w: 80, h: 30 },
-            { x: 800, y: 320, w: 80, h: 30 },
-            { x: 1000, y: 370, w: 150, h: 30 }
+            { x: 0, y: 370, w: 100, h: 30 },           // 시작
+            { x: 500, y: 370, w: 80, h: 30 },          // 중간
+            { x: 1000, y: 370, w: 150, h: 30 }         // 도착
         ],
         walls: [],
-        anchors: [{ x: 180, y: 100 }, { x: 420, y: 80 }, { x: 680, y: 80 }, { x: 900, y: 100 }],
-        stars: [{ x: 300, y: 150 }, { x: 550, y: 130 }, { x: 800, y: 150 }],
-        door: { x: 1070, y: 310 }
+        anchors: [{ x: 250, y: 80 }, { x: 500, y: 60 }, { x: 750, y: 80 }],
+        stars: [{ x: 350, y: 130 }, { x: 620, y: 110 }, { x: 880, y: 130 }],
+        door: { x: 1080, y: 310 }
     });
 
-    // Level 9
+    // Level 9 - 벽 + 스윙 조합
     levels.push({
         name: 'Level 9',
         spawn: { x: 50, y: 320 },
         platforms: [
-            { x: 0, y: 370, w: 100, h: 30 },
-            { x: 250, y: 370, w: 60, h: 30 },
-            { x: 450, y: 350, w: 60, h: 30 },
-            { x: 650, y: 320, w: 60, h: 30 },
-            { x: 850, y: 370, w: 150, h: 30 }
+            { x: 0, y: 370, w: 100, h: 30 },           // 시작
+            { x: 500, y: 370, w: 80, h: 30 },          // 중간
+            { x: 1000, y: 370, w: 150, h: 30 }         // 도착
         ],
         walls: [
-            { x: 350, y: 150, w: 20, h: 200 },
-            { x: 550, y: 100, w: 20, h: 220 },
-            { x: 750, y: 150, w: 20, h: 170 }
+            { x: 700, y: 150, w: 20, h: 220 },
+            { x: 780, y: 150, w: 20, h: 220 }
         ],
-        anchors: [{ x: 160, y: 150 }, { x: 400, y: 80 }, { x: 600, y: 60 }, { x: 800, y: 100 }],
-        stars: [{ x: 280, y: 280 }, { x: 480, y: 250 }, { x: 680, y: 220 }],
-        door: { x: 920, y: 310 }
+        anchors: [{ x: 250, y: 100 }, { x: 500, y: 80 }, { x: 900, y: 100 }],
+        stars: [{ x: 350, y: 150 }, { x: 740, y: 230 }, { x: 900, y: 150 }],
+        door: { x: 1080, y: 310 }
     });
 
     // Level 10 - 버튼 시스템 도입!
@@ -239,37 +230,169 @@ function createLevels() {
         name: 'Level 10',
         spawn: { x: 50, y: 320 },
         platforms: [
-            { x: 0, y: 370, w: 120, h: 30 },           // 시작 플랫폼
-            { x: 250, y: 350, w: 100, h: 30 },         // 첫 번째 버튼 플랫폼
-            { x: 500, y: 320, w: 100, h: 30 },         // 중간 플랫폼
-            { x: 750, y: 280, w: 100, h: 30 },         // 두 번째 버튼 플랫폼
-            { x: 1000, y: 370, w: 180, h: 30 }         // 도착 플랫폼
+            { x: 0, y: 370, w: 100, h: 30 },           // 시작 (버튼1)
+            { x: 500, y: 370, w: 100, h: 30 },         // 중간
+            { x: 1000, y: 370, w: 100, h: 30 },        // 버튼2
+            { x: 1400, y: 370, w: 150, h: 30 }         // 도착
         ],
-        walls: [
-            { x: 440, y: 200, w: 20, h: 120 },         // 첫 번째 별 옆 벽
-            { x: 690, y: 150, w: 20, h: 130 }          // 두 번째 별 옆 벽
-        ],
+        walls: [],
         anchors: [
-            { x: 180, y: 180 },                        // 첫 번째 줄 앵커
-            { x: 380, y: 150 },                        // 두 번째 줄 앵커
-            { x: 620, y: 120 },                        // 세 번째 줄 앵커
-            { x: 880, y: 150 }                         // 네 번째 줄 앵커
+            { x: 250, y: 80 },
+            { x: 500, y: 60 },
+            { x: 750, y: 80 },
+            { x: 1200, y: 80 }
         ],
         stars: [
-            { x: 440, y: 250, active: false, buttonId: 0 },  // 첫 번째 비활성 별
-            { x: 690, y: 200, active: false, buttonId: 1 }   // 두 번째 비활성 별
+            { x: 350, y: 120, active: false, buttonId: 0 },  // 버튼1로 활성화
+            { x: 850, y: 100, active: false, buttonId: 1 }   // 버튼2로 활성화
         ],
         buttons: [
-            { x: 280, y: 335, targetStarIndex: 0 },    // 첫 번째 버튼 (플랫폼 y:350 - 15)
-            { x: 780, y: 265, targetStarIndex: 1 }     // 두 번째 버튼 (플랫폼 y:280 - 15)
+            { x: 30, y: 355, targetStarIndex: 0 },     // 시작 플랫폼 버튼
+            { x: 1030, y: 355, targetStarIndex: 1 }    // 버튼2 플랫폼
         ],
-        door: { x: 1100, y: 310 },
+        door: { x: 1470, y: 310 },
         isButtonLevel: true,
         tutorial: '버튼을 밟아 별을 활성화하세요!'
     });
 
-    // Generate levels 11-100
-    for (let i = 11; i <= 100; i++) {
+    // Level 11 - 벽타기 + 스윙 조합
+    levels.push({
+        name: 'Level 11',
+        spawn: { x: 50, y: 320 },
+        platforms: [
+            { x: 0, y: 370, w: 100, h: 30 },           // 시작
+            { x: 450, y: 370, w: 100, h: 30 },         // 중간 (넓은 간격)
+            { x: 900, y: 370, w: 150, h: 30 }          // 도착
+        ],
+        walls: [
+            { x: 200, y: 180, w: 20, h: 190 },         // 벽타기용 벽 1
+            { x: 280, y: 180, w: 20, h: 190 }          // 벽타기용 벽 2
+        ],
+        anchors: [
+            { x: 350, y: 100 },
+            { x: 650, y: 80 },
+            { x: 800, y: 100 }
+        ],
+        stars: [
+            { x: 240, y: 250 },   // 벽 사이 별
+            { x: 550, y: 150 },   // 스윙 별 1
+            { x: 750, y: 130 }    // 스윙 별 2
+        ],
+        door: { x: 980, y: 310 }
+    });
+
+    // Level 12 - 연속 스윙 레벨
+    levels.push({
+        name: 'Level 12',
+        spawn: { x: 50, y: 320 },
+        platforms: [
+            { x: 0, y: 370, w: 100, h: 30 },           // 시작
+            { x: 550, y: 370, w: 80, h: 30 },          // 중간 착지
+            { x: 1100, y: 370, w: 150, h: 30 }         // 도착
+        ],
+        walls: [],
+        anchors: [
+            { x: 200, y: 80 },
+            { x: 400, y: 60 },
+            { x: 650, y: 60 },
+            { x: 900, y: 80 }
+        ],
+        stars: [
+            { x: 300, y: 130 },   // 높은 별 1
+            { x: 520, y: 100 },   // 높은 별 2
+            { x: 780, y: 120 }    // 높은 별 3
+        ],
+        door: { x: 1170, y: 310 }
+    });
+
+    // Level 13 - 높은 스윙 레벨 (왔다갔다 하며 별 수집)
+    levels.push({
+        name: 'Level 13',
+        spawn: { x: 50, y: 320 },
+        platforms: [
+            { x: 0, y: 370, w: 100, h: 30 },           // 시작
+            { x: 500, y: 370, w: 100, h: 30 },         // 중간 착지
+            { x: 1000, y: 370, w: 150, h: 30 }         // 도착
+        ],
+        walls: [],  // 벽 없음 - 순수 스윙 레벨
+        anchors: [
+            { x: 200, y: 50 },    // 첫 번째 앵커 (높이)
+            { x: 450, y: 30 },    // 두 번째 앵커 (더 높이)
+            { x: 700, y: 30 },    // 세 번째 앵커
+            { x: 950, y: 50 }     // 네 번째 앵커
+        ],
+        stars: [
+            { x: 300, y: 100 },   // 높은 곳 별 1
+            { x: 550, y: 80 },    // 높은 곳 별 2
+            { x: 800, y: 100 }    // 높은 곳 별 3
+        ],
+        door: { x: 1070, y: 310 }
+    });
+
+    // Level 14 - 버튼 2개 + 스윙 조합
+    levels.push({
+        name: 'Level 14',
+        spawn: { x: 50, y: 320 },
+        platforms: [
+            { x: 0, y: 370, w: 100, h: 30 },           // 시작 (버튼1)
+            { x: 500, y: 370, w: 100, h: 30 },         // 중간
+            { x: 1000, y: 370, w: 100, h: 30 },        // 버튼2
+            { x: 1400, y: 370, w: 150, h: 30 }         // 도착
+        ],
+        walls: [],
+        anchors: [
+            { x: 250, y: 80 },
+            { x: 500, y: 60 },
+            { x: 750, y: 80 },
+            { x: 1200, y: 80 }
+        ],
+        stars: [
+            { x: 380, y: 120, active: false, buttonId: 0 },  // 버튼1로 활성화
+            { x: 900, y: 100, active: false, buttonId: 1 },  // 버튼2로 활성화
+            { x: 1200, y: 120 }                              // 일반 별
+        ],
+        buttons: [
+            { x: 30, y: 355, targetStarIndex: 0 },     // 시작 플랫폼 버튼
+            { x: 1030, y: 355, targetStarIndex: 1 }    // 버튼2 플랫폼
+        ],
+        door: { x: 1470, y: 310 },
+        isButtonLevel: true
+    });
+
+    // Level 15 - 최종 도전 (벽타기 + 스윙 종합)
+    levels.push({
+        name: 'Level 15',
+        spawn: { x: 50, y: 320 },
+        platforms: [
+            { x: 0, y: 370, w: 100, h: 30 },           // 시작
+            { x: 500, y: 370, w: 80, h: 30 },          // 중간 1
+            { x: 1000, y: 370, w: 80, h: 30 },         // 중간 2
+            { x: 1500, y: 370, w: 150, h: 30 }         // 도착
+        ],
+        walls: [
+            { x: 200, y: 150, w: 20, h: 220 },         // 벽 1
+            { x: 280, y: 150, w: 20, h: 220 },         // 벽 2
+            { x: 700, y: 100, w: 20, h: 270 },         // 벽 3
+            { x: 780, y: 100, w: 20, h: 270 }          // 벽 4
+        ],
+        anchors: [
+            { x: 400, y: 50 },
+            { x: 600, y: 30 },
+            { x: 900, y: 50 },
+            { x: 1200, y: 30 },
+            { x: 1400, y: 50 }
+        ],
+        stars: [
+            { x: 240, y: 220 },   // 벽 사이 별 1
+            { x: 500, y: 80 },    // 스윙 별 1
+            { x: 740, y: 180 },   // 벽 사이 별 2
+            { x: 1100, y: 60 }    // 스윙 별 2
+        ],
+        door: { x: 1570, y: 310 }
+    });
+
+    // Generate levels 16-100 (여전히 랜덤이지만 최소 1개 이상의 별 보장)
+    for (let i = 16; i <= 100; i++) {
         levels.push(generateLevel(i));
     }
 
@@ -326,6 +449,12 @@ function generateLevel(num) {
     }
 
     platforms.push({ x: lastX + 80, y: 370, w: 180, h: 30 });
+
+    // 별이 없으면 최소 1개 추가
+    if (stars.length === 0) {
+        const midPlatform = platforms[Math.floor(platforms.length / 2)];
+        stars.push({ x: midPlatform.x + midPlatform.w / 2, y: midPlatform.y - 50 });
+    }
 
     return {
         name: `Level ${num}`,
@@ -660,12 +789,14 @@ function updatePhysics() {
     // Buttons - 버튼 충돌 감지 및 별 활성화
     for (const button of buttons) {
         if (button.pressed) continue;
-        // 플레이어가 버튼 위에 있는지 확인
-        if (player.x + player.width > button.x &&
-            player.x < button.x + button.width &&
-            player.y + player.height >= button.y &&
-            player.y + player.height <= button.y + button.height + 10 &&
-            player.onGround) {
+        // 플레이어가 버튼 위에 있는지 확인 (더 넓은 범위로 감지)
+        const playerCenterX = player.x + player.width / 2;
+        const buttonCenterX = button.x + button.width / 2;
+        const horizontalOverlap = Math.abs(playerCenterX - buttonCenterX) < (player.width / 2 + button.width / 2);
+        const verticalNear = player.y + player.height >= button.y - 5 &&
+                            player.y + player.height <= button.y + button.height + 20;
+
+        if (horizontalOverlap && verticalNear && player.onGround) {
             button.pressed = true;
             // 연결된 별 활성화
             if (button.targetStarIndex !== undefined && stars[button.targetStarIndex]) {
