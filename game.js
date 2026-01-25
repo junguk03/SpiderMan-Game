@@ -372,6 +372,10 @@ function shootGrapple() {
     const dx = mouseX - grapple.x;
     const dy = mouseY - grapple.y;
     const dist = Math.sqrt(dx * dx + dy * dy);
+    if (dist < 1) {
+        grapple.active = false;
+        return;
+    }
     grapple.vx = (dx / dist) * CONFIG.ropeSpeed;
     grapple.vy = (dy / dist) * CONFIG.ropeSpeed;
 }
@@ -580,6 +584,9 @@ function render() {
     ctx.fillStyle = grad;
     ctx.fillRect(0, 0, canvas.width, canvas.height);
 
+    // Only draw game elements when playing
+    if (gameState !== 'playing') return;
+
     ctx.save();
     ctx.translate(-camera.x, -camera.y);
 
@@ -619,9 +626,9 @@ function render() {
         ctx.shadowColor = '#ffd700';
         ctx.shadowBlur = 15;
         ctx.beginPath();
-        for (let i = 0; i < 5; i++) {
-            const angle = (i * 4 * Math.PI) / 5 - Math.PI / 2;
-            const r = i % 2 === 0 ? s.radius : s.radius * 0.5;
+        for (let i = 0; i < 10; i++) {
+            const angle = (i * Math.PI) / 5 - Math.PI / 2;
+            const r = i % 2 === 0 ? s.radius : s.radius * 0.4;
             if (i === 0) ctx.moveTo(Math.cos(angle) * r, Math.sin(angle) * r);
             else ctx.lineTo(Math.cos(angle) * r, Math.sin(angle) * r);
         }
@@ -631,15 +638,17 @@ function render() {
     }
 
     // Door
-    ctx.fillStyle = door.open ? '#2ecc71' : '#7f8c8d';
-    ctx.fillRect(door.x, door.y, door.width, door.height);
-    if (door.open) {
-        ctx.shadowColor = '#2ecc71';
-        ctx.shadowBlur = 20;
-        ctx.strokeStyle = '#2ecc71';
-        ctx.lineWidth = 3;
-        ctx.strokeRect(door.x, door.y, door.width, door.height);
-        ctx.shadowBlur = 0;
+    if (door) {
+        ctx.fillStyle = door.open ? '#2ecc71' : '#7f8c8d';
+        ctx.fillRect(door.x, door.y, door.width, door.height);
+        if (door.open) {
+            ctx.shadowColor = '#2ecc71';
+            ctx.shadowBlur = 20;
+            ctx.strokeStyle = '#2ecc71';
+            ctx.lineWidth = 3;
+            ctx.strokeRect(door.x, door.y, door.width, door.height);
+            ctx.shadowBlur = 0;
+        }
     }
 
     // Grapple
