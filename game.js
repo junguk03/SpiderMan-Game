@@ -44,6 +44,7 @@ let grapple = {
 
 let platforms = [], walls = [], anchors = [], stars = [];
 let buttons = []; // 버튼 배열 추가
+let hazards = []; // 빨간 발판/벽 (닿으면 죽음)
 let door = null;
 let spawnPoint = { x: 0, y: 0 };
 let camera = { x: 0, y: 0 };
@@ -359,109 +360,419 @@ function createLevels() {
         isButtonLevel: true
     });
 
-    // Level 15 - 최종 도전 (벽타기 + 스윙 종합)
+    // Level 15 - 긴 맵 + 벽타기 + 점프맵 스타일
     levels.push({
         name: 'Level 15',
         spawn: { x: 50, y: 320 },
         platforms: [
             { x: 0, y: 370, w: 100, h: 30 },           // 시작
-            { x: 500, y: 370, w: 80, h: 30 },          // 중간 1
-            { x: 1000, y: 370, w: 80, h: 30 },         // 중간 2
-            { x: 1500, y: 370, w: 150, h: 30 }         // 도착
+            // 첫 번째 구간: 스윙해서 넘어가기
+            { x: 450, y: 350, w: 60, h: 30 },          // 좁은 발판 1
+            { x: 800, y: 320, w: 60, h: 30 },          // 좁은 발판 2
+            // 벽타기 구간
+            { x: 1100, y: 370, w: 80, h: 30 },         // 벽 앞 착지
+            { x: 1100, y: 150, w: 100, h: 30 },        // 벽 위 플랫폼
+            // 높은 곳 점프맵
+            { x: 1350, y: 120, w: 50, h: 30 },         // 높은 좁은 발판 1
+            { x: 1550, y: 100, w: 50, h: 30 },         // 높은 좁은 발판 2
+            { x: 1750, y: 80, w: 50, h: 30 },          // 높은 좁은 발판 3
+            // 버튼 구간
+            { x: 1950, y: 100, w: 100, h: 30 },        // 버튼 플랫폼
+            // 돌아오는 길
+            { x: 2150, y: 370, w: 150, h: 30 }         // 도착
         ],
         walls: [
-            { x: 200, y: 150, w: 20, h: 220 },         // 벽 1
-            { x: 280, y: 150, w: 20, h: 220 },         // 벽 2
-            { x: 700, y: 100, w: 20, h: 270 },         // 벽 3
-            { x: 780, y: 100, w: 20, h: 270 }          // 벽 4
+            { x: 1100, y: 180, w: 20, h: 190 },        // 벽타기용 벽 1
+            { x: 1180, y: 180, w: 20, h: 190 }         // 벽타기용 벽 2
         ],
         anchors: [
-            { x: 400, y: 50 },
-            { x: 600, y: 30 },
-            { x: 900, y: 50 },
-            { x: 1200, y: 30 },
-            { x: 1400, y: 50 }
+            { x: 250, y: 80 },    // 시작→첫 발판
+            { x: 620, y: 60 },    // 발판1→발판2
+            { x: 950, y: 80 },    // 발판2→벽 구간
+            { x: 1250, y: 40 },   // 벽 위→높은 발판들
+            { x: 1450, y: 30 },
+            { x: 1650, y: 30 },
+            { x: 1850, y: 30 },
+            { x: 2050, y: 50 }    // 버튼→도착
         ],
         stars: [
-            { x: 240, y: 220 },   // 벽 사이 별 1
-            { x: 500, y: 80 },    // 스윙 별 1
-            { x: 740, y: 180 },   // 벽 사이 별 2
-            { x: 1100, y: 60 }    // 스윙 별 2
+            { x: 450, y: 280, active: false, buttonId: 0 },   // 버튼으로 활성화
+            { x: 800, y: 250, active: false, buttonId: 0 },   // 버튼으로 활성화
+            { x: 1140, y: 260 },                               // 벽 사이 별
+            { x: 1850, y: 50 }                                 // 높은 곳 별
         ],
-        door: { x: 1570, y: 310 }
+        buttons: [
+            { x: 1980, y: 85, targetStarIndex: [0, 1] }  // 버튼 (별 0, 1 동시 활성화)
+        ],
+        door: { x: 2200, y: 310 },
+        isButtonLevel: true
     });
 
-    // Generate levels 16-100 (여전히 랜덤이지만 최소 1개 이상의 별 보장)
-    for (let i = 16; i <= 100; i++) {
-        levels.push(generateLevel(i));
-    }
+    // Level 16 - 연속 좁은 발판 + 스윙
+    levels.push({
+        name: 'Level 16',
+        spawn: { x: 50, y: 320 },
+        platforms: [
+            { x: 0, y: 370, w: 100, h: 30 },
+            { x: 400, y: 340, w: 50, h: 30 },
+            { x: 700, y: 300, w: 50, h: 30 },
+            { x: 1000, y: 260, w: 50, h: 30 },
+            { x: 1300, y: 220, w: 50, h: 30 },
+            { x: 1600, y: 180, w: 50, h: 30 },
+            { x: 1900, y: 370, w: 150, h: 30 }
+        ],
+        walls: [],
+        anchors: [
+            { x: 200, y: 80 },
+            { x: 550, y: 60 },
+            { x: 850, y: 50 },
+            { x: 1150, y: 40 },
+            { x: 1450, y: 30 },
+            { x: 1750, y: 50 }
+        ],
+        stars: [
+            { x: 300, y: 150 },
+            { x: 600, y: 120 },
+            { x: 900, y: 100 },
+            { x: 1200, y: 80 }
+        ],
+        door: { x: 1950, y: 310 }
+    });
+
+    // Level 17 - 벽타기 연속 + 스윙
+    levels.push({
+        name: 'Level 17',
+        spawn: { x: 50, y: 320 },
+        platforms: [
+            { x: 0, y: 370, w: 100, h: 30 },
+            { x: 300, y: 370, w: 60, h: 30 },
+            { x: 300, y: 150, w: 80, h: 30 },    // 첫 벽 위
+            { x: 600, y: 370, w: 60, h: 30 },
+            { x: 600, y: 100, w: 80, h: 30 },    // 둘째 벽 위
+            { x: 950, y: 60, w: 50, h: 30 },     // 높은 좁은 발판
+            { x: 1200, y: 370, w: 150, h: 30 }
+        ],
+        walls: [
+            { x: 300, y: 180, w: 20, h: 190 },
+            { x: 360, y: 180, w: 20, h: 190 },
+            { x: 600, y: 130, w: 20, h: 240 },
+            { x: 660, y: 130, w: 20, h: 240 }
+        ],
+        anchors: [
+            { x: 200, y: 100 },
+            { x: 450, y: 50 },
+            { x: 750, y: 30 },
+            { x: 1050, y: 30 }
+        ],
+        stars: [
+            { x: 330, y: 260 },
+            { x: 630, y: 220 },
+            { x: 800, y: 60 },
+            { x: 1100, y: 80 }
+        ],
+        door: { x: 1280, y: 310 }
+    });
+
+    // Level 18 - 극한 스윙 (발판 아주 좁고 멀리)
+    levels.push({
+        name: 'Level 18',
+        spawn: { x: 50, y: 320 },
+        platforms: [
+            { x: 0, y: 370, w: 100, h: 30 },
+            { x: 500, y: 350, w: 40, h: 30 },
+            { x: 1000, y: 320, w: 40, h: 30 },
+            { x: 1500, y: 280, w: 40, h: 30 },
+            { x: 2000, y: 370, w: 150, h: 30 }
+        ],
+        walls: [],
+        anchors: [
+            { x: 250, y: 60 },
+            { x: 500, y: 40 },
+            { x: 750, y: 50 },
+            { x: 1000, y: 40 },
+            { x: 1250, y: 50 },
+            { x: 1500, y: 40 },
+            { x: 1750, y: 60 }
+        ],
+        stars: [
+            { x: 350, y: 100 },
+            { x: 750, y: 80 },
+            { x: 1250, y: 70 },
+            { x: 1750, y: 100 }
+        ],
+        door: { x: 2050, y: 310 }
+    });
+
+    // Level 19 - 복잡하지만 여유있는 맵
+    levels.push({
+        name: 'Level 19',
+        spawn: { x: 50, y: 320 },
+        platforms: [
+            { x: 0, y: 370, w: 150, h: 30 },
+            { x: 400, y: 370, w: 100, h: 30 },
+            { x: 700, y: 350, w: 100, h: 30 },
+            { x: 1000, y: 320, w: 100, h: 30 },
+            { x: 1000, y: 150, w: 120, h: 30 },   // 벽 위
+            { x: 1350, y: 120, w: 80, h: 30 },
+            { x: 1650, y: 100, w: 80, h: 30 },
+            { x: 1950, y: 370, w: 200, h: 30 }
+        ],
+        walls: [
+            { x: 1000, y: 180, w: 20, h: 140 },
+            { x: 1100, y: 180, w: 20, h: 140 }
+        ],
+        anchors: [
+            { x: 250, y: 100 },
+            { x: 550, y: 80 },
+            { x: 850, y: 70 },
+            { x: 1200, y: 40 },
+            { x: 1500, y: 30 },
+            { x: 1800, y: 40 }
+        ],
+        stars: [
+            { x: 300, y: 200 },
+            { x: 600, y: 180 },
+            { x: 1050, y: 240 },   // 벽 사이
+            { x: 1450, y: 60 },
+            { x: 1750, y: 50 }
+        ],
+        door: { x: 2050, y: 310 }
+    });
+
+    // Level 20 - 위험요소 도입! (바닥 있어서 안 떨어짐, 빨간 발판 피하기)
+    levels.push({
+        name: 'Level 20',
+        spawn: { x: 50, y: 320 },
+        platforms: [
+            { x: 0, y: 370, w: 2500, h: 30 }       // 긴 바닥 (떨어져 죽지 않음)
+        ],
+        walls: [],
+        anchors: [
+            { x: 300, y: 100 },
+            { x: 600, y: 80 },
+            { x: 900, y: 100 },
+            { x: 1200, y: 80 },
+            { x: 1500, y: 100 },
+            { x: 1800, y: 80 }
+        ],
+        hazards: [
+            { x: 200, y: 340, w: 80, h: 30 },      // 빨간 바닥 1
+            { x: 450, y: 340, w: 100, h: 30 },     // 빨간 바닥 2
+            { x: 750, y: 340, w: 80, h: 30 },      // 빨간 바닥 3
+            { x: 1050, y: 340, w: 120, h: 30 },    // 빨간 바닥 4
+            { x: 1350, y: 340, w: 80, h: 30 },     // 빨간 바닥 5
+            { x: 1650, y: 340, w: 100, h: 30 }     // 빨간 바닥 6
+        ],
+        stars: [
+            { x: 400, y: 150 },
+            { x: 800, y: 130 },
+            { x: 1200, y: 150 },
+            { x: 1600, y: 130 }
+        ],
+        door: { x: 2000, y: 310 },
+        tutorial: '⚠️ 빨간 발판에 닿으면 죽습니다! 줄타기로 피하세요!'
+    });
+
+    // Level 21 - 위험요소 + 떨어지면 죽음
+    levels.push({
+        name: 'Level 21',
+        spawn: { x: 50, y: 320 },
+        platforms: [
+            { x: 0, y: 370, w: 100, h: 30 },
+            { x: 400, y: 350, w: 80, h: 30 },
+            { x: 800, y: 320, w: 80, h: 30 },
+            { x: 1200, y: 370, w: 80, h: 30 },
+            { x: 1600, y: 370, w: 150, h: 30 }
+        ],
+        walls: [],
+        anchors: [
+            { x: 200, y: 80 },
+            { x: 450, y: 60 },
+            { x: 700, y: 70 },
+            { x: 1000, y: 60 },
+            { x: 1400, y: 80 }
+        ],
+        hazards: [
+            { x: 440, y: 200, w: 20, h: 150 },     // 빨간 벽 (스윙 중 피하기)
+            { x: 900, y: 150, w: 20, h: 170 },     // 빨간 벽 2
+            { x: 1240, y: 340, w: 60, h: 30 }      // 빨간 바닥
+        ],
+        stars: [
+            { x: 300, y: 150 },
+            { x: 600, y: 120 },
+            { x: 1000, y: 100 },
+            { x: 1450, y: 200 }
+        ],
+        door: { x: 1680, y: 310 }
+    });
+
+    // Level 22 - 복합 위험요소
+    levels.push({
+        name: 'Level 22',
+        spawn: { x: 50, y: 320 },
+        platforms: [
+            { x: 0, y: 370, w: 100, h: 30 },
+            { x: 450, y: 340, w: 60, h: 30 },
+            { x: 850, y: 300, w: 60, h: 30 },
+            { x: 1250, y: 260, w: 60, h: 30 },
+            { x: 1650, y: 370, w: 150, h: 30 }
+        ],
+        walls: [
+            { x: 1250, y: 100, w: 20, h: 160 },
+            { x: 1310, y: 100, w: 20, h: 160 }
+        ],
+        anchors: [
+            { x: 200, y: 80 },
+            { x: 450, y: 50 },
+            { x: 650, y: 60 },
+            { x: 1050, y: 50 },
+            { x: 1400, y: 40 },
+            { x: 1550, y: 80 }
+        ],
+        hazards: [
+            { x: 300, y: 200, w: 20, h: 170 },     // 빨간 벽 1
+            { x: 600, y: 150, w: 20, h: 150 },     // 빨간 벽 2
+            { x: 950, y: 100, w: 20, h: 200 },     // 빨간 벽 3
+            { x: 1480, y: 340, w: 80, h: 30 }      // 빨간 바닥
+        ],
+        stars: [
+            { x: 350, y: 100 },
+            { x: 750, y: 80 },
+            { x: 1150, y: 60 },
+            { x: 1280, y: 180 }    // 벽 사이
+        ],
+        door: { x: 1720, y: 310 }
+    });
+
+    // Level 23 - 위험한 미로
+    levels.push({
+        name: 'Level 23',
+        spawn: { x: 50, y: 320 },
+        platforms: [
+            { x: 0, y: 370, w: 100, h: 30 },
+            { x: 400, y: 370, w: 60, h: 30 },
+            { x: 400, y: 180, w: 80, h: 30 },      // 벽 위
+            { x: 800, y: 150, w: 60, h: 30 },
+            { x: 1200, y: 120, w: 60, h: 30 },
+            { x: 1600, y: 370, w: 150, h: 30 }
+        ],
+        walls: [
+            { x: 400, y: 210, w: 20, h: 160 },
+            { x: 460, y: 210, w: 20, h: 160 }
+        ],
+        anchors: [
+            { x: 200, y: 100 },
+            { x: 500, y: 50 },
+            { x: 650, y: 40 },
+            { x: 1000, y: 30 },
+            { x: 1400, y: 40 }
+        ],
+        hazards: [
+            { x: 250, y: 180, w: 20, h: 190 },     // 빨간 벽 1
+            { x: 600, y: 100, w: 20, h: 80 },      // 빨간 벽 2 (높은 곳)
+            { x: 1000, y: 80, w: 20, h: 70 },      // 빨간 벽 3
+            { x: 1350, y: 200, w: 20, h: 170 },    // 빨간 벽 4
+            { x: 430, y: 340, w: 50, h: 30 }       // 빨간 바닥
+        ],
+        stars: [
+            { x: 430, y: 270 },   // 벽 사이
+            { x: 700, y: 80 },
+            { x: 1100, y: 60 },
+            { x: 1500, y: 100 }
+        ],
+        door: { x: 1680, y: 310 }
+    });
+
+    // Level 24 - 극한 도전
+    levels.push({
+        name: 'Level 24',
+        spawn: { x: 50, y: 320 },
+        platforms: [
+            { x: 0, y: 370, w: 100, h: 30 },
+            { x: 500, y: 340, w: 40, h: 30 },
+            { x: 1000, y: 300, w: 40, h: 30 },
+            { x: 1500, y: 260, w: 40, h: 30 },
+            { x: 2000, y: 220, w: 40, h: 30 },
+            { x: 2400, y: 370, w: 150, h: 30 }
+        ],
+        walls: [],
+        anchors: [
+            { x: 250, y: 80 },
+            { x: 500, y: 50 },
+            { x: 750, y: 60 },
+            { x: 1000, y: 40 },
+            { x: 1250, y: 50 },
+            { x: 1500, y: 30 },
+            { x: 1750, y: 40 },
+            { x: 2000, y: 30 },
+            { x: 2200, y: 60 }
+        ],
+        hazards: [
+            { x: 350, y: 150, w: 20, h: 220 },     // 빨간 벽
+            { x: 700, y: 100, w: 20, h: 200 },
+            { x: 1150, y: 80, w: 20, h: 220 },
+            { x: 1650, y: 60, w: 20, h: 200 },
+            { x: 2100, y: 100, w: 20, h: 120 }
+        ],
+        stars: [
+            { x: 400, y: 100 },
+            { x: 850, y: 80 },
+            { x: 1350, y: 60 },
+            { x: 1850, y: 50 },
+            { x: 2250, y: 150 }
+        ],
+        door: { x: 2480, y: 310 }
+    });
+
+    // Level 25 - 마스터 레벨
+    levels.push({
+        name: 'Level 25',
+        spawn: { x: 50, y: 320 },
+        platforms: [
+            { x: 0, y: 370, w: 100, h: 30 },
+            { x: 400, y: 350, w: 50, h: 30 },
+            { x: 400, y: 150, w: 80, h: 30 },       // 벽 위 1
+            { x: 900, y: 370, w: 50, h: 30 },
+            { x: 900, y: 120, w: 80, h: 30 },       // 벽 위 2
+            { x: 1400, y: 80, w: 50, h: 30 },
+            { x: 1800, y: 60, w: 50, h: 30 },
+            { x: 2200, y: 370, w: 200, h: 30 }
+        ],
+        walls: [
+            { x: 400, y: 180, w: 20, h: 170 },
+            { x: 460, y: 180, w: 20, h: 170 },
+            { x: 900, y: 150, w: 20, h: 220 },
+            { x: 960, y: 150, w: 20, h: 220 }
+        ],
+        anchors: [
+            { x: 200, y: 100 },
+            { x: 550, y: 50 },
+            { x: 700, y: 80 },
+            { x: 1050, y: 40 },
+            { x: 1250, y: 30 },
+            { x: 1600, y: 20 },
+            { x: 2000, y: 40 }
+        ],
+        hazards: [
+            { x: 300, y: 200, w: 20, h: 170 },
+            { x: 600, y: 100, w: 20, h: 80 },
+            { x: 800, y: 200, w: 20, h: 170 },
+            { x: 1100, y: 60, w: 20, h: 60 },
+            { x: 1500, y: 40, w: 20, h: 40 },
+            { x: 1900, y: 30, w: 20, h: 30 },
+            { x: 2100, y: 200, w: 20, h: 170 }
+        ],
+        stars: [
+            { x: 430, y: 260 },    // 벽 사이 1
+            { x: 930, y: 230 },    // 벽 사이 2
+            { x: 1150, y: 50 },
+            { x: 1700, y: 30 },
+            { x: 2050, y: 100 }
+        ],
+        door: { x: 2320, y: 310 }
+    });
 
     return levels;
-}
-
-function generateLevel(num) {
-    const difficulty = Math.min((num - 5) / 50, 1);
-    const platforms = [];
-    const walls = [];
-    const anchors = [];
-    const stars = [];
-
-    platforms.push({ x: 0, y: 370, w: 120, h: 30 });
-
-    let lastX = 120;
-    let lastY = 370;
-    const segments = 3 + Math.floor(num / 15);
-
-    for (let i = 0; i < segments; i++) {
-        const type = Math.random();
-        const gap = 120 + difficulty * 100 + Math.random() * 80;
-
-        if (type < 0.3 && difficulty > 0.15) {
-            // Wall section
-            const wx = lastX + gap;
-            const wh = 120 + Math.random() * 80;
-            walls.push({ x: wx, y: lastY - wh, w: 20, h: wh });
-            walls.push({ x: wx + 80, y: lastY - wh, w: 20, h: wh });
-            platforms.push({ x: wx, y: lastY - wh - 30, w: 100, h: 30 });
-            stars.push({ x: wx + 50, y: lastY - wh / 2 });
-            lastX = wx + 100;
-            lastY = lastY - wh - 30;
-        } else if (type < 0.6 && difficulty > 0.1) {
-            // Grapple section
-            const px = lastX + gap + 80;
-            anchors.push({ x: lastX + gap / 2 + 40, y: lastY - 180 - Math.random() * 80 });
-            stars.push({ x: lastX + gap / 2 + 40, y: lastY - 80 });
-            const newY = lastY + (Math.random() - 0.5) * 50;
-            platforms.push({ x: px, y: newY, w: 100 + Math.random() * 40, h: 30 });
-            lastX = px + 100;
-            lastY = newY;
-        } else {
-            // Jump section
-            const px = lastX + 70 + Math.random() * 50;
-            const py = lastY + (Math.random() - 0.5) * 30;
-            platforms.push({ x: px, y: py, w: 80 + Math.random() * 50, h: 30 });
-            if (Math.random() > 0.4) {
-                stars.push({ x: px + 50, y: py - 50 });
-            }
-            lastX = px + 100;
-            lastY = py;
-        }
-    }
-
-    platforms.push({ x: lastX + 80, y: 370, w: 180, h: 30 });
-
-    // 별이 없으면 최소 1개 추가
-    if (stars.length === 0) {
-        const midPlatform = platforms[Math.floor(platforms.length / 2)];
-        stars.push({ x: midPlatform.x + midPlatform.w / 2, y: midPlatform.y - 50 });
-    }
-
-    return {
-        name: `Level ${num}`,
-        spawn: { x: 50, y: 320 },
-        platforms, walls, anchors, stars,
-        door: { x: lastX + 150, y: 310 }
-    };
 }
 
 const LEVELS = createLevels();
@@ -588,6 +899,16 @@ function loadLevel(num) {
         }));
     } else {
         buttons = [];
+    }
+
+    // 위험요소 로드 (빨간 발판/벽)
+    if (level.hazards) {
+        hazards = level.hazards.map(h => ({
+            ...h,
+            y: h.y + yOffset
+        }));
+    } else {
+        hazards = [];
     }
 
     door = { ...level.door, y: level.door.y + yOffset, width: 50, height: 70, open: false };
@@ -786,6 +1107,15 @@ function updatePhysics() {
     // Death
     if (player.y > canvas.height + 100) gameOver();
 
+    // Hazards - 빨간 발판/벽 충돌 시 즉사
+    for (const hazard of hazards) {
+        if (player.x + player.width > hazard.x && player.x < hazard.x + hazard.w &&
+            player.y + player.height > hazard.y && player.y < hazard.y + hazard.h) {
+            gameOver();
+            return;
+        }
+    }
+
     // Buttons - 버튼 충돌 감지 및 별 활성화
     for (const button of buttons) {
         if (button.pressed) continue;
@@ -798,9 +1128,15 @@ function updatePhysics() {
 
         if (horizontalOverlap && verticalNear && player.onGround) {
             button.pressed = true;
-            // 연결된 별 활성화
-            if (button.targetStarIndex !== undefined && stars[button.targetStarIndex]) {
-                stars[button.targetStarIndex].active = true;
+            // 연결된 별 활성화 (단일 인덱스 또는 배열 지원)
+            if (button.targetStarIndex !== undefined) {
+                if (Array.isArray(button.targetStarIndex)) {
+                    for (const idx of button.targetStarIndex) {
+                        if (stars[idx]) stars[idx].active = true;
+                    }
+                } else if (stars[button.targetStarIndex]) {
+                    stars[button.targetStarIndex].active = true;
+                }
             }
         }
     }
@@ -862,26 +1198,12 @@ function checkCollisions() {
                 player.x = wall.x - player.width;
                 player.vx = 0;
                 player.onWall = 1;
-                if (grapple.attached) {
-                    const newDist = Math.sqrt(
-                        Math.pow(player.x + player.width / 2 - grapple.anchorX, 2) +
-                        Math.pow(player.y - grapple.anchorY, 2)
-                    );
-                    grapple.ropeLength = Math.min(grapple.ropeLength, newDist);
-                }
             }
             // 왼쪽에서 벽 오른쪽에 부딪힘
             else if (player.x < wall.x + wall.w && player.x > wall.x + wall.w / 2 - 10) {
                 player.x = wall.x + wall.w;
                 player.vx = 0;
                 player.onWall = -1;
-                if (grapple.attached) {
-                    const newDist = Math.sqrt(
-                        Math.pow(player.x + player.width / 2 - grapple.anchorX, 2) +
-                        Math.pow(player.y - grapple.anchorY, 2)
-                    );
-                    grapple.ropeLength = Math.min(grapple.ropeLength, newDist);
-                }
             }
         }
 
@@ -941,6 +1263,28 @@ function render() {
     ctx.fillStyle = '#5a5a7a';
     for (const w of walls) {
         ctx.fillRect(w.x, w.y, w.w, w.h);
+    }
+
+    // Hazards (빨간 발판/벽)
+    for (const h of hazards) {
+        ctx.save();
+        ctx.fillStyle = '#e74c3c';
+        ctx.shadowColor = '#e74c3c';
+        ctx.shadowBlur = 15;
+        ctx.fillRect(h.x, h.y, h.w, h.h);
+        // 경고 줄무늬
+        ctx.fillStyle = '#c0392b';
+        const stripeWidth = 10;
+        for (let i = 0; i < h.w + h.h; i += stripeWidth * 2) {
+            ctx.beginPath();
+            ctx.moveTo(h.x + i, h.y);
+            ctx.lineTo(h.x + i + stripeWidth, h.y);
+            ctx.lineTo(h.x, h.y + i + stripeWidth);
+            ctx.lineTo(h.x, h.y + i);
+            ctx.closePath();
+            ctx.fill();
+        }
+        ctx.restore();
     }
 
     // Anchors
@@ -1042,6 +1386,9 @@ function render() {
 
     // Button level tutorial - 버튼 레벨 안내
     if (LEVELS[currentLevel]?.isButtonLevel) drawButtonTutorial();
+
+    // Hazard level tutorial - 위험요소 안내
+    if (LEVELS[currentLevel]?.tutorial && hazards.length > 0) drawHazardTutorial();
 }
 
 function drawPlayer() {
@@ -1143,6 +1490,21 @@ function drawButtonTutorial() {
     ctx.strokeRect(canvas.width / 2 - w / 2, 20, w, h);
     ctx.fillStyle = '#fff';
     ctx.font = '20px Segoe UI';
+    ctx.textAlign = 'center';
+    ctx.fillText(msg, canvas.width / 2, 52);
+}
+
+function drawHazardTutorial() {
+    const msg = LEVELS[currentLevel]?.tutorial || '⚠️ 빨간 발판/벽에 닿으면 죽습니다!';
+
+    ctx.fillStyle = 'rgba(0, 0, 0, 0.7)';
+    const w = 500, h = 50;
+    ctx.fillRect(canvas.width / 2 - w / 2, 20, w, h);
+    ctx.strokeStyle = '#e74c3c';
+    ctx.lineWidth = 2;
+    ctx.strokeRect(canvas.width / 2 - w / 2, 20, w, h);
+    ctx.fillStyle = '#fff';
+    ctx.font = '18px Segoe UI';
     ctx.textAlign = 'center';
     ctx.fillText(msg, canvas.width / 2, 52);
 }
