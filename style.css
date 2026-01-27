@@ -127,6 +127,39 @@ body {
     max-width: 350px !important;
 }
 
+.stage-select {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    margin-bottom: 25px;
+    padding: 15px 25px;
+    background: rgba(255, 255, 255, 0.1);
+    border-radius: 15px;
+}
+
+.stage-select label {
+    color: #fff;
+    font-size: 16px;
+    font-weight: 500;
+}
+
+.stage-select select {
+    padding: 10px 20px;
+    font-size: 16px;
+    border: none;
+    border-radius: 10px;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: #fff;
+    cursor: pointer;
+    outline: none;
+    min-width: 150px;
+}
+
+.stage-select select option {
+    background: #1a1a2e;
+    color: #fff;
+}
+
 .btn {
     background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
     border: none;
