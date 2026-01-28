@@ -947,6 +947,237 @@ function createLevels() {
         isButtonLevel: true
     });
 
+    // ===== Level 26-30: 깔끔하고 넓은 디자인 =====
+
+    // Level 26 - 넓고 깔끔한 2층 맵 (앵커 최소화)
+    levels.push({
+        name: 'Level 26',
+        spawn: { x: 50, y: 320 },
+        platforms: [
+            // 1층 - 넓은 발판
+            { x: 0, y: 370, w: 200, h: 30 },
+            { x: 500, y: 370, w: 200, h: 30 },
+            { x: 1000, y: 370, w: 200, h: 30 },
+            { x: 1500, y: 370, w: 200, h: 30 },
+            { x: 2000, y: 370, w: 200, h: 30 },
+            // 2층 - 1층과 거리 넓게 (y: 100)
+            { x: 700, y: 100, w: 200, h: 30 },
+            { x: 1200, y: 80, w: 200, h: 30 },
+            { x: 1700, y: 100, w: 200, h: 30 },
+            // 문
+            { x: 2400, y: 370, w: 200, h: 30 }
+        ],
+        walls: [],
+        anchors: [
+            // 발판 사이마다 하나씩만
+            { x: 350, y: 200 },
+            { x: 850, y: 200 },
+            { x: 1350, y: 200 },
+            { x: 1850, y: 200 },
+            // 2층 앵커
+            { x: 950, y: 40 },
+            { x: 1450, y: 30 }
+        ],
+        hazards: [
+            // 빨간 벽 2개만
+            { x: 600, y: 250, w: 20, h: 120 },
+            { x: 1400, y: 220, w: 20, h: 150 }
+        ],
+        stars: [
+            { x: 350, y: 280 },
+            { x: 850, y: 50 },
+            { x: 1350, y: 30 },
+            { x: 1850, y: 280 }
+        ],
+        door: { x: 2500, y: 310 }
+    });
+
+    // Level 27 - 오른쪽으로 가면서 2층으로 올라가기
+    levels.push({
+        name: 'Level 27',
+        spawn: { x: 50, y: 320 },
+        platforms: [
+            // 1층에서 시작
+            { x: 0, y: 370, w: 250, h: 30 },
+            { x: 500, y: 370, w: 200, h: 30 },
+            // 1.5층 (중간)
+            { x: 1000, y: 280, w: 200, h: 30 },
+            // 2층
+            { x: 1500, y: 180, w: 200, h: 30 },
+            { x: 2000, y: 120, w: 200, h: 30 },
+            // 도착
+            { x: 2500, y: 80, w: 250, h: 30 }
+        ],
+        walls: [],
+        anchors: [
+            { x: 380, y: 200 },
+            { x: 750, y: 150 },
+            { x: 1250, y: 100 },
+            { x: 1750, y: 50 },
+            { x: 2250, y: 30 }
+        ],
+        hazards: [
+            { x: 900, y: 320, w: 80, h: 50 },
+            { x: 1900, y: 160, w: 20, h: 80 }
+        ],
+        stars: [
+            { x: 380, y: 280 },
+            { x: 750, y: 200 },
+            { x: 1250, y: 150 },
+            { x: 1750, y: 80 },
+            { x: 2250, y: 40 }
+        ],
+        door: { x: 2600, y: 20 }
+    });
+
+    // Level 28 - 넓은 2층 왕복 (버튼 1개)
+    levels.push({
+        name: 'Level 28',
+        spawn: { x: 50, y: 320 },
+        platforms: [
+            // 1층 - 넓은 발판
+            { x: 0, y: 370, w: 250, h: 30 },
+            { x: 600, y: 370, w: 200, h: 30 },
+            { x: 1200, y: 370, w: 200, h: 30 },
+            { x: 1800, y: 370, w: 200, h: 30 },
+            { x: 2400, y: 370, w: 250, h: 30 },
+            // 2층 (y: 80, 1층과 거리 290)
+            { x: 2400, y: 80, w: 200, h: 30 },    // 버튼
+            { x: 1800, y: 60, w: 200, h: 30 },
+            { x: 1200, y: 80, w: 200, h: 30 },
+            { x: 600, y: 100, w: 200, h: 30 },
+            { x: 0, y: 120, w: 250, h: 30 }       // 문
+        ],
+        walls: [
+            { x: 2400, y: 110, w: 20, h: 260 }
+        ],
+        anchors: [
+            { x: 400, y: 200 },
+            { x: 900, y: 180 },
+            { x: 1500, y: 180 },
+            { x: 2100, y: 200 },
+            // 2층
+            { x: 2100, y: 30 },
+            { x: 1500, y: 20 },
+            { x: 900, y: 30 },
+            { x: 300, y: 50 }
+        ],
+        hazards: [
+            { x: 450, y: 300, w: 100, h: 70 },
+            { x: 1050, y: 300, w: 100, h: 70 },
+            { x: 1650, y: 300, w: 100, h: 70 }
+        ],
+        stars: [
+            { x: 400, y: 280, active: false, buttonId: 0 },
+            { x: 900, y: 280, active: false, buttonId: 0 },
+            { x: 1500, y: 280, active: false, buttonId: 0 },
+            { x: 2100, y: 280, active: false, buttonId: 0 },
+            { x: 1500, y: 30 }
+        ],
+        buttons: [
+            { x: 2480, y: 65, targetStarIndex: [0, 1, 2, 3] }
+        ],
+        door: { x: 100, y: 60 },
+        isButtonLevel: true
+    });
+
+    // Level 29 - 점점 올라가는 넓은 맵
+    levels.push({
+        name: 'Level 29',
+        spawn: { x: 50, y: 320 },
+        platforms: [
+            // 점점 높아지는 구조
+            { x: 0, y: 370, w: 300, h: 30 },
+            { x: 600, y: 320, w: 250, h: 30 },
+            { x: 1150, y: 260, w: 250, h: 30 },
+            { x: 1700, y: 190, w: 250, h: 30 },
+            { x: 2250, y: 120, w: 250, h: 30 },
+            { x: 2800, y: 50, w: 300, h: 30 }
+        ],
+        walls: [],
+        anchors: [
+            { x: 450, y: 180 },
+            { x: 900, y: 120 },
+            { x: 1450, y: 80 },
+            { x: 2000, y: 40 },
+            { x: 2550, y: 0 }
+        ],
+        hazards: [
+            { x: 380, y: 250, w: 20, h: 120 },
+            { x: 1050, y: 200, w: 20, h: 120 },
+            { x: 2150, y: 60, w: 20, h: 130 }
+        ],
+        stars: [
+            { x: 450, y: 250 },
+            { x: 900, y: 180 },
+            { x: 1450, y: 130 },
+            { x: 2000, y: 80 },
+            { x: 2550, y: 20 }
+        ],
+        door: { x: 2950, y: -10 }
+    });
+
+    // Level 30 - 넓은 3층 맵 (버튼 2개, 왕복)
+    levels.push({
+        name: 'Level 30',
+        spawn: { x: 50, y: 320 },
+        platforms: [
+            // 1층 - 넓은 발판
+            { x: 0, y: 370, w: 300, h: 30 },
+            { x: 600, y: 370, w: 250, h: 30 },
+            { x: 1200, y: 370, w: 250, h: 30 },
+            { x: 1800, y: 370, w: 250, h: 30 },
+            { x: 2400, y: 370, w: 300, h: 30 },
+            // 2층 (y: 180)
+            { x: 2400, y: 180, w: 250, h: 30 },   // 버튼1
+            { x: 1800, y: 160, w: 200, h: 30 },
+            { x: 1200, y: 180, w: 200, h: 30 },
+            { x: 600, y: 200, w: 200, h: 30 },
+            { x: 0, y: 180, w: 250, h: 30 },
+            // 3층 (y: 0)
+            { x: 0, y: 0, w: 250, h: 30 },        // 버튼2
+            { x: 600, y: -20, w: 200, h: 30 },
+            { x: 1200, y: 0, w: 300, h: 30 }      // 문
+        ],
+        walls: [
+            { x: 2400, y: 210, w: 20, h: 160 },
+            { x: 0, y: 30, w: 20, h: 150 }
+        ],
+        anchors: [
+            // 1층→2층
+            { x: 450, y: 250 },
+            { x: 900, y: 230 },
+            { x: 1500, y: 230 },
+            { x: 2100, y: 250 },
+            // 2층→3층
+            { x: 150, y: 80 },
+            { x: 400, y: -50 },
+            { x: 900, y: -60 }
+        ],
+        hazards: [
+            { x: 450, y: 300, w: 100, h: 70 },
+            { x: 1050, y: 300, w: 100, h: 70 },
+            { x: 1650, y: 300, w: 100, h: 70 },
+            { x: 2250, y: 300, w: 100, h: 70 },
+            // 2층 빨간 벽
+            { x: 1000, y: 100, w: 20, h: 80 }
+        ],
+        stars: [
+            { x: 450, y: 280, active: false, buttonId: 0 },
+            { x: 900, y: 280, active: false, buttonId: 0 },
+            { x: 1500, y: 280, active: false, buttonId: 1 },
+            { x: 2100, y: 280, active: false, buttonId: 1 },
+            { x: 400, y: -50 },
+            { x: 900, y: -50 }
+        ],
+        buttons: [
+            { x: 2500, y: 165, targetStarIndex: [0, 1] },
+            { x: 100, y: -15, targetStarIndex: [2, 3] }
+        ],
+        door: { x: 1350, y: -60 },
+        isButtonLevel: true
+    });
+
     return levels;
 }
 
@@ -965,6 +1196,13 @@ function init() {
         if (e.code === 'KeyA' || e.code === 'ArrowLeft') keys.left = true;
         if (e.code === 'KeyD' || e.code === 'ArrowRight') keys.right = true;
         if (e.code === 'Space') { keys.jump = true; e.preventDefault(); }
+        if (e.code === 'Escape') {
+            if (gameState === 'playing') {
+                pauseGame();
+            } else if (gameState === 'paused') {
+                resumeGame();
+            }
+        }
     });
     document.addEventListener('keyup', (e) => {
         if (e.code === 'KeyA' || e.code === 'ArrowLeft') keys.left = false;
@@ -1008,6 +1246,8 @@ function init() {
     document.getElementById('start-btn').addEventListener('click', startGame);
     document.getElementById('retry-btn').addEventListener('click', restartLevel);
     document.getElementById('next-level-btn').addEventListener('click', nextLevel);
+    document.getElementById('resume-btn').addEventListener('click', resumeGame);
+    document.getElementById('stage-select-btn').addEventListener('click', goToStageSelect);
 
     // 스테이지 선택 드롭다운 채우기
     populateStageSelector();
@@ -1060,6 +1300,26 @@ function nextLevel() {
     if (currentLevel >= LEVELS.length) currentLevel = 1;
     loadLevel(currentLevel);
     gameState = 'playing';
+}
+
+function pauseGame() {
+    gameState = 'paused';
+    const levelDisplay = currentLevel === 0 ? 'Tutorial' : currentLevel;
+    document.getElementById('pause-level').textContent = levelDisplay;
+    document.getElementById('pause-screen').classList.remove('hidden');
+}
+
+function resumeGame() {
+    document.getElementById('pause-screen').classList.add('hidden');
+    gameState = 'playing';
+}
+
+function goToStageSelect() {
+    document.getElementById('pause-screen').classList.add('hidden');
+    document.getElementById('start-screen').classList.remove('hidden');
+    // 현재 레벨을 선택 상태로 설정
+    document.getElementById('stage-selector').value = currentLevel;
+    gameState = 'start';
 }
 
 function loadLevel(num) {
@@ -1437,8 +1697,8 @@ function render() {
     ctx.fillStyle = grad;
     ctx.fillRect(0, 0, canvas.width, canvas.height);
 
-    // Only draw game elements when playing
-    if (gameState !== 'playing') return;
+    // Only draw game elements when playing or paused
+    if (gameState !== 'playing' && gameState !== 'paused') return;
 
     ctx.save();
     ctx.translate(-camera.x, -camera.y);
@@ -1732,7 +1992,7 @@ document.addEventListener('DOMContentLoaded', init);
 // 게임 진행 중 새로고침 시 경고 메시지 표시
 window.addEventListener('beforeunload', function(e) {
     // 게임이 시작 화면이 아닌 경우에만 경고 표시
-    if (gameState === 'playing' || gameState === 'levelComplete') {
+    if (gameState === 'playing' || gameState === 'levelComplete' || gameState === 'paused') {
         e.preventDefault();
         // 표준 방식으로 경고 메시지 설정
         e.returnValue = '게임 진행 상황이 초기화됩니다. 정말 나가시겠습니까?';

@@ -182,6 +182,21 @@ body {
     transform: translateY(0) scale(1);
 }
 
+.btn-secondary {
+    background: linear-gradient(135deg, #6c757d 0%, #495057 100%);
+    box-shadow: 0 10px 30px rgba(108, 117, 125, 0.4);
+}
+
+.btn-secondary:hover {
+    box-shadow: 0 15px 40px rgba(108, 117, 125, 0.6);
+}
+
+.pause-buttons {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+}
+
 @media (max-width: 600px) {
     .screen h1 {
         font-size: 40px;
