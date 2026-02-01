@@ -45,6 +45,7 @@ let grapple = {
 let platforms = [], walls = [], anchors = [], stars = [];
 let buttons = []; // 버튼 배열 추가
 let hazards = []; // 빨간 발판/벽 (닿으면 죽음)
+let movingPlatforms = []; // 움직이는 발판
 let door = null;
 let spawnPoint = { x: 0, y: 0 };
 let camera = { x: 0, y: 0 };
@@ -1116,65 +1117,25 @@ function createLevels() {
         isButtonLevel: true
     });
 
-    // Level 30 - 넓은 3층 맵 (버튼 2개, 왕복)
+    // Level 30 - 움직이는 발판 입문 (간단한 구조)
     levels.push({
         name: 'Level 30',
         spawn: { x: 50, y: 320 },
         platforms: [
-            // 1층 - 넓은 발판
-            { x: 0, y: 370, w: 300, h: 30 },
-            { x: 600, y: 370, w: 250, h: 30 },
-            { x: 1200, y: 370, w: 250, h: 30 },
-            { x: 1800, y: 370, w: 250, h: 30 },
-            { x: 2400, y: 370, w: 300, h: 30 },
-            // 2층 (y: 180)
-            { x: 2400, y: 180, w: 250, h: 30 },   // 버튼1
-            { x: 1800, y: 160, w: 200, h: 30 },
-            { x: 1200, y: 180, w: 200, h: 30 },
-            { x: 600, y: 200, w: 200, h: 30 },
-            { x: 0, y: 180, w: 250, h: 30 },
-            // 3층 (y: 0)
-            { x: 0, y: 0, w: 250, h: 30 },        // 버튼2
-            { x: 600, y: -20, w: 200, h: 30 },
-            { x: 1200, y: 0, w: 300, h: 30 }      // 문
+            { x: 0, y: 370, w: 200, h: 30 },       // 시작 발판
+            { x: 600, y: 370, w: 200, h: 30 }       // 도착 발판 + 문
         ],
-        walls: [
-            { x: 2400, y: 210, w: 20, h: 160 },
-            { x: 0, y: 30, w: 20, h: 150 }
-        ],
-        anchors: [
-            // 1층→2층
-            { x: 450, y: 250 },
-            { x: 900, y: 230 },
-            { x: 1500, y: 230 },
-            { x: 2100, y: 250 },
-            // 2층→3층
-            { x: 150, y: 80 },
-            { x: 400, y: -50 },
-            { x: 900, y: -60 }
-        ],
-        hazards: [
-            { x: 450, y: 300, w: 100, h: 70 },
-            { x: 1050, y: 300, w: 100, h: 70 },
-            { x: 1650, y: 300, w: 100, h: 70 },
-            { x: 2250, y: 300, w: 100, h: 70 },
-            // 2층 빨간 벽
-            { x: 1000, y: 100, w: 20, h: 80 }
+        walls: [],
+        anchors: [],
+        hazards: [],
+        movingPlatforms: [
+            { x: 220, y: 370, w: 120, h: 25, type: 'horizontal', range: 250, speed: 1.5 }
         ],
         stars: [
-            { x: 450, y: 280, active: false, buttonId: 0 },
-            { x: 900, y: 280, active: false, buttonId: 0 },
-            { x: 1500, y: 280, active: false, buttonId: 1 },
-            { x: 2100, y: 280, active: false, buttonId: 1 },
-            { x: 400, y: -50 },
-            { x: 900, y: -50 }
+            { x: 350, y: 300 },
+            { x: 500, y: 300 }
         ],
-        buttons: [
-            { x: 2500, y: 165, targetStarIndex: [0, 1] },
-            { x: 100, y: -15, targetStarIndex: [2, 3] }
-        ],
-        door: { x: 1350, y: -60 },
-        isButtonLevel: true
+        door: { x: 680, y: 310 }
     });
 
     return levels;
@@ -1363,6 +1324,20 @@ function loadLevel(num) {
         hazards = [];
     }
 
+    // 움직이는 발판 로드
+    if (level.movingPlatforms) {
+        movingPlatforms = level.movingPlatforms.map(mp => ({
+            ...mp,
+            y: mp.y + yOffset,
+            originX: mp.x,
+            originY: mp.y + yOffset,
+            direction: 1,
+            offset: 0
+        }));
+    } else {
+        movingPlatforms = [];
+    }
+
     door = { ...level.door, y: level.door.y + yOffset, width: 50, height: 70, open: false };
     spawnPoint = { x: level.spawn.x, y: level.spawn.y + yOffset };
     totalStars = stars.length;
@@ -1460,7 +1435,32 @@ function updateGrapple() {
 }
 
 // ==================== PHYSICS ====================
+function updateMovingPlatforms() {
+    for (const mp of movingPlatforms) {
+        const prevX = mp.x;
+        const prevY = mp.y;
+
+        mp.offset += mp.speed * mp.direction;
+        if (mp.offset >= mp.range || mp.offset <= 0) {
+            mp.direction *= -1;
+            mp.offset = Math.max(0, Math.min(mp.offset, mp.range));
+        }
+
+        if (mp.type === 'horizontal') {
+            mp.x = mp.originX + mp.offset;
+        } else {
+            mp.y = mp.originY + mp.offset;
+        }
+
+        mp.deltaX = mp.x - prevX;
+        mp.deltaY = mp.y - prevY;
+    }
+}
+
 function updatePhysics() {
+    // 움직이는 발판 업데이트
+    updateMovingPlatforms();
+
     // Movement
     if (!grapple.attached) {
         if (keys.left) {
@@ -1641,6 +1641,28 @@ function checkCollisions() {
         }
     }
 
+    // 움직이는 발판 충돌
+    for (const mp of movingPlatforms) {
+        if (player.x + player.width > mp.x && player.x < mp.x + mp.w) {
+            if (player.vy >= 0 && player.y + player.height > mp.y && player.y + player.height < mp.y + mp.h + 10) {
+                player.y = mp.y - player.height;
+                player.vy = 0;
+                player.onGround = true;
+                // 플레이어를 플랫폼과 함께 이동
+                player.x += mp.deltaX || 0;
+                player.y += mp.deltaY || 0;
+                if (grapple.attached) {
+                    grapple.active = false;
+                    grapple.attached = false;
+                }
+            }
+            else if (player.vy < 0 && player.y < mp.y + mp.h && player.y > mp.y) {
+                player.y = mp.y + mp.h;
+                player.vy = 0;
+            }
+        }
+    }
+
     // 벽 충돌 (좌우 + 상하)
     for (const wall of walls) {
         // 수평 충돌 (좌우)
@@ -1709,6 +1731,21 @@ function render() {
         ctx.fillStyle = '#6a6a8a';
         ctx.fillRect(p.x, p.y, p.w, 4);
         ctx.fillStyle = '#4a4a6a';
+    }
+
+    // 움직이는 발판
+    for (const mp of movingPlatforms) {
+        ctx.save();
+        ctx.shadowColor = '#4aa8ff';
+        ctx.shadowBlur = 12;
+        ctx.fillStyle = '#3a8ad4';
+        ctx.fillRect(mp.x, mp.y, mp.w, mp.h);
+        ctx.fillStyle = '#6abfff';
+        ctx.fillRect(mp.x, mp.y, mp.w, 4);
+        ctx.strokeStyle = '#2a6aaa';
+        ctx.lineWidth = 1;
+        ctx.strokeRect(mp.x, mp.y, mp.w, mp.h);
+        ctx.restore();
     }
 
     // Walls
