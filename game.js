@@ -1138,6 +1138,43 @@ function createLevels() {
         door: { x: 680, y: 310 }
     });
 
+    // Level 31 - 움직이는 발판 + 줄타기 조합
+    levels.push({
+        name: 'Level 31',
+        spawn: { x: 50, y: 320 },
+        platforms: [
+            // 1층
+            { x: 0, y: 370, w: 200, h: 30 },         // 시작 발판
+            { x: 550, y: 370, w: 250, h: 30 },        // 중간 발판 (문)
+            // 2층 (왼쪽으로 펼쳐진 발판들)
+            { x: 100, y: 150, w: 150, h: 25 },        // 2층 첫번째
+            { x: -200, y: 130, w: 150, h: 25 },       // 2층 두번째
+            { x: -500, y: 110, w: 150, h: 25 },       // 2층 세번째
+            { x: -800, y: 130, w: 150, h: 25 },       // 2층 네번째 (끝)
+        ],
+        walls: [],
+        anchors: [
+            { x: 500, y: 50 },    // 위아래 블럭 타고 올라간 뒤 왼쪽으로 스윙
+            { x: 0, y: 30 },      // 2층 발판 사이 스윙용
+            { x: -350, y: 10 },   // 2층 발판 사이 스윙용
+            { x: -650, y: 30 },   // 2층 끝쪽 스윙용
+        ],
+        hazards: [],
+        movingPlatforms: [
+            // 1층: 시작→중간 좌우 이동
+            { x: 220, y: 370, w: 120, h: 25, type: 'horizontal', range: 200, speed: 1.5 },
+            // 중간 발판 오른쪽: 위아래 이동 (1층→2층 연결)
+            { x: 820, y: 370, w: 100, h: 25, type: 'vertical', range: -230, speed: 1.2 }
+        ],
+        stars: [
+            { x: 150, y: 90 },     // 2층 첫번째 발판 위
+            { x: -150, y: 70 },    // 2층 두번째 발판 위
+            { x: -450, y: 50 },    // 2층 세번째 발판 위
+            { x: -750, y: 70 },    // 2층 네번째 발판 위
+        ],
+        door: { x: 620, y: 310 }
+    });
+
     return levels;
 }
 
@@ -1441,9 +1478,11 @@ function updateMovingPlatforms() {
         const prevY = mp.y;
 
         mp.offset += mp.speed * mp.direction;
-        if (mp.offset >= mp.range || mp.offset <= 0) {
+        const minRange = Math.min(0, mp.range);
+        const maxRange = Math.max(0, mp.range);
+        if (mp.offset >= maxRange || mp.offset <= minRange) {
             mp.direction *= -1;
-            mp.offset = Math.max(0, Math.min(mp.offset, mp.range));
+            mp.offset = Math.max(minRange, Math.min(mp.offset, maxRange));
         }
 
         if (mp.type === 'horizontal') {
