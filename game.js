@@ -1213,6 +1213,302 @@ function createLevels() {
         door: { x: 2450, y: 310 }
     });
 
+    // Level 33 - 위아래 움직이는 발판 + 빨간 바닥
+    levels.push({
+        name: 'Level 33',
+        spawn: { x: 50, y: 320 },
+        platforms: [
+            { x: 0, y: 370, w: 150, h: 30 },
+            { x: 400, y: 370, w: 100, h: 30 },
+            { x: 800, y: 370, w: 100, h: 30 },
+            { x: 1200, y: 370, w: 100, h: 30 },
+            { x: 1600, y: 370, w: 200, h: 30 }
+        ],
+        walls: [],
+        anchors: [
+            { x: 250, y: 200 },
+            { x: 600, y: 180 },
+            { x: 1000, y: 200 },
+            { x: 1400, y: 180 }
+        ],
+        hazards: [
+            { x: 150, y: 390, w: 250, h: 20 },
+            { x: 500, y: 390, w: 300, h: 20 },
+            { x: 900, y: 390, w: 300, h: 20 },
+            { x: 1300, y: 390, w: 300, h: 20 }
+        ],
+        movingPlatforms: [
+            { x: 200, y: 370, w: 80, h: 25, type: 'vertical', range: -150, speed: 1.2 },
+            { x: 550, y: 370, w: 80, h: 25, type: 'vertical', range: -180, speed: 1.5 },
+            { x: 950, y: 370, w: 80, h: 25, type: 'vertical', range: -150, speed: 1.0 },
+            { x: 1350, y: 370, w: 80, h: 25, type: 'vertical', range: -180, speed: 1.3 }
+        ],
+        stars: [
+            { x: 230, y: 180 },
+            { x: 580, y: 150 },
+            { x: 980, y: 180 },
+            { x: 1380, y: 150 }
+        ],
+        door: { x: 1680, y: 310 }
+    });
+
+    // Level 34 - 지그재그 올라가는 움직이는 발판
+    levels.push({
+        name: 'Level 34',
+        spawn: { x: 50, y: 320 },
+        platforms: [
+            { x: 0, y: 370, w: 150, h: 30 },
+            { x: 1800, y: 150, w: 200, h: 30 }
+        ],
+        walls: [],
+        anchors: [
+            { x: 500, y: 100 },
+            { x: 900, y: 50 },
+            { x: 1300, y: 80 },
+            { x: 1600, y: 100 }
+        ],
+        hazards: [
+            { x: 300, y: 300, w: 20, h: 70 },
+            { x: 700, y: 250, w: 20, h: 80 },
+            { x: 1100, y: 200, w: 20, h: 90 },
+            { x: 1500, y: 150, w: 20, h: 100 }
+        ],
+        movingPlatforms: [
+            { x: 180, y: 350, w: 100, h: 25, type: 'horizontal', range: 150, speed: 1.5 },
+            { x: 450, y: 300, w: 100, h: 25, type: 'horizontal', range: 180, speed: 1.8 },
+            { x: 750, y: 250, w: 100, h: 25, type: 'horizontal', range: 150, speed: 1.5 },
+            { x: 1050, y: 200, w: 100, h: 25, type: 'horizontal', range: 180, speed: 2.0 },
+            { x: 1350, y: 150, w: 100, h: 25, type: 'horizontal', range: 150, speed: 1.5 }
+        ],
+        stars: [
+            { x: 350, y: 280 },
+            { x: 650, y: 230 },
+            { x: 950, y: 180 },
+            { x: 1250, y: 130 },
+            { x: 1550, y: 80 }
+        ],
+        door: { x: 1860, y: 90 }
+    });
+
+    // Level 35 - 교차하는 움직이는 발판
+    levels.push({
+        name: 'Level 35',
+        spawn: { x: 50, y: 320 },
+        platforms: [
+            { x: 0, y: 370, w: 150, h: 30 },
+            { x: 600, y: 200, w: 150, h: 30 },
+            { x: 1200, y: 370, w: 200, h: 30 }
+        ],
+        walls: [],
+        anchors: [
+            { x: 300, y: 150 },
+            { x: 500, y: 100 },
+            { x: 900, y: 120 },
+            { x: 1100, y: 180 }
+        ],
+        hazards: [
+            { x: 250, y: 320, w: 100, h: 20 },
+            { x: 450, y: 280, w: 20, h: 90 },
+            { x: 850, y: 250, w: 20, h: 120 },
+            { x: 1050, y: 300, w: 100, h: 20 }
+        ],
+        movingPlatforms: [
+            { x: 180, y: 350, w: 100, h: 25, type: 'horizontal', range: 200, speed: 1.8 },
+            { x: 800, y: 200, w: 100, h: 25, type: 'horizontal', range: 250, speed: 2.0 },
+            { x: 400, y: 370, w: 80, h: 25, type: 'vertical', range: -180, speed: 1.5 },
+            { x: 1000, y: 200, w: 80, h: 25, type: 'vertical', range: 170, speed: 1.5 }
+        ],
+        stars: [
+            { x: 280, y: 280 },
+            { x: 430, y: 150 },
+            { x: 680, y: 140 },
+            { x: 950, y: 130 },
+            { x: 1100, y: 280 }
+        ],
+        door: { x: 1280, y: 310 }
+    });
+
+    // Level 36 - 빠른 움직이는 발판 + 좁은 통로
+    levels.push({
+        name: 'Level 36',
+        spawn: { x: 50, y: 100 },
+        platforms: [
+            { x: 0, y: 150, w: 150, h: 30 },
+            { x: 1400, y: 370, w: 200, h: 30 }
+        ],
+        walls: [
+            { x: 350, y: 0, w: 20, h: 120 },
+            { x: 350, y: 200, w: 20, h: 200 },
+            { x: 700, y: 100, w: 20, h: 150 },
+            { x: 700, y: 320, w: 20, h: 80 },
+            { x: 1050, y: 0, w: 20, h: 180 },
+            { x: 1050, y: 250, w: 20, h: 150 }
+        ],
+        anchors: [
+            { x: 200, y: 50 },
+            { x: 550, y: 80 },
+            { x: 900, y: 50 },
+            { x: 1250, y: 100 }
+        ],
+        hazards: [
+            { x: 350, y: 120, w: 20, h: 80 },
+            { x: 700, y: 250, w: 20, h: 70 },
+            { x: 1050, y: 180, w: 20, h: 70 }
+        ],
+        movingPlatforms: [
+            { x: 180, y: 150, w: 120, h: 25, type: 'horizontal', range: 150, speed: 2.5 },
+            { x: 400, y: 180, w: 100, h: 25, type: 'vertical', range: 150, speed: 2.0 },
+            { x: 750, y: 280, w: 100, h: 25, type: 'horizontal', range: 250, speed: 2.2 },
+            { x: 1100, y: 250, w: 100, h: 25, type: 'vertical', range: 100, speed: 2.0 }
+        ],
+        stars: [
+            { x: 280, y: 100 },
+            { x: 500, y: 250 },
+            { x: 850, y: 220 },
+            { x: 1150, y: 300 }
+        ],
+        door: { x: 1480, y: 310 }
+    });
+
+    // Level 37 - 연속 점프 움직이는 발판
+    levels.push({
+        name: 'Level 37',
+        spawn: { x: 50, y: 320 },
+        platforms: [
+            { x: 0, y: 370, w: 120, h: 30 },
+            { x: 2000, y: 370, w: 200, h: 30 }
+        ],
+        walls: [],
+        anchors: [
+            { x: 350, y: 200 },
+            { x: 700, y: 180 },
+            { x: 1050, y: 200 },
+            { x: 1400, y: 180 },
+            { x: 1750, y: 200 }
+        ],
+        hazards: [
+            { x: 120, y: 395, w: 1880, h: 30 }
+        ],
+        movingPlatforms: [
+            { x: 150, y: 350, w: 80, h: 25, type: 'vertical', range: -100, speed: 1.5 },
+            { x: 350, y: 300, w: 80, h: 25, type: 'horizontal', range: 100, speed: 2.0 },
+            { x: 550, y: 350, w: 80, h: 25, type: 'vertical', range: -120, speed: 1.8 },
+            { x: 750, y: 280, w: 80, h: 25, type: 'horizontal', range: 100, speed: 2.2 },
+            { x: 950, y: 350, w: 80, h: 25, type: 'vertical', range: -100, speed: 1.5 },
+            { x: 1150, y: 300, w: 80, h: 25, type: 'horizontal', range: 100, speed: 2.0 },
+            { x: 1350, y: 350, w: 80, h: 25, type: 'vertical', range: -120, speed: 1.8 },
+            { x: 1550, y: 280, w: 80, h: 25, type: 'horizontal', range: 100, speed: 2.2 },
+            { x: 1750, y: 350, w: 80, h: 25, type: 'vertical', range: -100, speed: 1.5 }
+        ],
+        stars: [
+            { x: 250, y: 220 },
+            { x: 500, y: 200 },
+            { x: 850, y: 180 },
+            { x: 1250, y: 200 },
+            { x: 1650, y: 180 }
+        ],
+        door: { x: 2080, y: 310 }
+    });
+
+    // Level 38 - 원형 경로 도전
+    levels.push({
+        name: 'Level 38',
+        spawn: { x: 50, y: 320 },
+        platforms: [
+            { x: 0, y: 370, w: 150, h: 30 },
+            { x: 1200, y: 370, w: 100, h: 30 },
+            { x: 1200, y: 200, w: 100, h: 30 },
+            { x: 600, y: 50, w: 150, h: 30 },
+            { x: 0, y: 200, w: 100, h: 30 },
+            { x: 550, y: 200, w: 150, h: 30 }
+        ],
+        walls: [],
+        anchors: [
+            { x: 400, y: 280 },
+            { x: 800, y: 280 },
+            { x: 1100, y: 150 },
+            { x: 900, y: 0 },
+            { x: 400, y: 0 },
+            { x: 150, y: 100 },
+            { x: 350, y: 150 }
+        ],
+        hazards: [
+            { x: 300, y: 340, w: 20, h: 30 },
+            { x: 700, y: 340, w: 20, h: 30 },
+            { x: 1000, y: 340, w: 20, h: 30 },
+            { x: 750, y: 20, w: 20, h: 30 },
+            { x: 450, y: 20, w: 20, h: 30 }
+        ],
+        movingPlatforms: [
+            { x: 200, y: 370, w: 100, h: 25, type: 'horizontal', range: 400, speed: 1.5 },
+            { x: 700, y: 370, w: 100, h: 25, type: 'horizontal', range: 400, speed: 1.5 },
+            { x: 1200, y: 300, w: 80, h: 25, type: 'vertical', range: -100, speed: 1.2 },
+            { x: 800, y: 50, w: 100, h: 25, type: 'horizontal', range: -300, speed: 1.5 },
+            { x: 0, y: 280, w: 80, h: 25, type: 'vertical', range: -80, speed: 1.2 }
+        ],
+        stars: [
+            { x: 400, y: 300 },
+            { x: 900, y: 300 },
+            { x: 1230, y: 280 },
+            { x: 700, y: -10 },
+            { x: 50, y: 150 }
+        ],
+        door: { x: 590, y: 140 }
+    });
+
+    // Level 39 - 최종 도전 (모든 요소 조합)
+    levels.push({
+        name: 'Level 39',
+        spawn: { x: 50, y: 320 },
+        platforms: [
+            { x: 0, y: 370, w: 120, h: 30 },
+            { x: 500, y: 370, w: 80, h: 30 },
+            { x: 900, y: 370, w: 80, h: 30 },
+            { x: 1300, y: 250, w: 100, h: 30 },
+            { x: 1700, y: 200, w: 100, h: 30 },
+            { x: 2100, y: 100, w: 200, h: 30 }
+        ],
+        walls: [
+            { x: 1250, y: 280, w: 20, h: 90 },
+            { x: 1650, y: 230, w: 20, h: 70 }
+        ],
+        anchors: [
+            { x: 300, y: 200 },
+            { x: 700, y: 180 },
+            { x: 1100, y: 150 },
+            { x: 1500, y: 100 },
+            { x: 1900, y: 50 },
+            { x: 2000, y: 30 }
+        ],
+        hazards: [
+            { x: 120, y: 395, w: 380, h: 25 },
+            { x: 580, y: 395, w: 320, h: 25 },
+            { x: 980, y: 395, w: 250, h: 25 },
+            { x: 400, y: 300, w: 20, h: 70 },
+            { x: 800, y: 280, w: 20, h: 90 },
+            { x: 1200, y: 150, w: 20, h: 100 },
+            { x: 1600, y: 100, w: 20, h: 100 },
+            { x: 2000, y: 50, w: 20, h: 50 }
+        ],
+        movingPlatforms: [
+            { x: 150, y: 350, w: 100, h: 25, type: 'horizontal', range: 250, speed: 2.0 },
+            { x: 600, y: 350, w: 80, h: 25, type: 'horizontal', range: 220, speed: 2.2 },
+            { x: 1000, y: 370, w: 80, h: 25, type: 'vertical', range: -130, speed: 1.5 },
+            { x: 1420, y: 250, w: 80, h: 25, type: 'horizontal', range: 180, speed: 2.0 },
+            { x: 1820, y: 200, w: 80, h: 25, type: 'vertical', range: -110, speed: 1.8 },
+            { x: 1950, y: 100, w: 80, h: 25, type: 'horizontal', range: 130, speed: 2.5 }
+        ],
+        stars: [
+            { x: 280, y: 280 },
+            { x: 700, y: 260 },
+            { x: 1050, y: 200 },
+            { x: 1500, y: 180 },
+            { x: 1850, y: 120 },
+            { x: 2050, y: 40 }
+        ],
+        door: { x: 2180, y: 40 }
+    });
+
     return levels;
 }
 
