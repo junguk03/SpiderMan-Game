@@ -1,0 +1,222 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background: #1a1a2e;
+    min-height: 100vh;
+    overflow: hidden;
+}
+
+#game-container {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    background: linear-gradient(180deg, #1a1a2e 0%, #16213e 100%);
+}
+
+#gameCanvas {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    display: block;
+}
+
+#ui-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    padding: 20px;
+    display: flex;
+    justify-content: space-between;
+    pointer-events: none;
+    z-index: 10;
+}
+
+#level-display, #score-display {
+    background: rgba(0, 0, 0, 0.5);
+    backdrop-filter: blur(10px);
+    padding: 10px 20px;
+    border-radius: 25px;
+    color: #fff;
+    font-size: 16px;
+    font-weight: 600;
+    letter-spacing: 1px;
+}
+
+#level-num, #score {
+    color: #ffd700;
+}
+
+#game-hint {
+    position: absolute;
+    bottom: 20px;
+    left: 50%;
+    transform: translateX(-50%);
+    background: rgba(0, 0, 0, 0.6);
+    backdrop-filter: blur(10px);
+    padding: 8px 20px;
+    border-radius: 20px;
+    color: rgba(255, 255, 255, 0.7);
+    font-size: 13px;
+    z-index: 10;
+    pointer-events: none;
+}
+
+.screen {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    background: rgba(15, 12, 41, 0.95);
+    z-index: 100;
+    animation: fadeIn 0.3s ease;
+}
+
+.screen.hidden {
+    display: none;
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
+}
+
+.screen h1 {
+    font-size: 56px;
+    color: #ffd700;
+    margin-bottom: 40px;
+    text-shadow: 0 0 30px rgba(255, 215, 0, 0.5);
+}
+
+.screen h2 {
+    font-size: 36px;
+    color: #fff;
+    margin-bottom: 15px;
+}
+
+.screen p {
+    font-size: 18px;
+    color: rgba(255, 255, 255, 0.8);
+    margin-bottom: 30px;
+    text-align: center;
+    max-width: 300px;
+    line-height: 1.6;
+}
+
+.warning-hint {
+    background: rgba(255, 193, 7, 0.2);
+    border: 1px solid rgba(255, 193, 7, 0.4);
+    padding: 10px 20px;
+    border-radius: 10px;
+    font-size: 14px !important;
+    color: #ffc107 !important;
+    max-width: 350px !important;
+}
+
+.stage-select {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    margin-bottom: 25px;
+    padding: 15px 25px;
+    background: rgba(255, 255, 255, 0.1);
+    border-radius: 15px;
+}
+
+.stage-select label {
+    color: #fff;
+    font-size: 16px;
+    font-weight: 500;
+}
+
+.stage-select select {
+    padding: 10px 20px;
+    font-size: 16px;
+    border: none;
+    border-radius: 10px;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: #fff;
+    cursor: pointer;
+    outline: none;
+    min-width: 150px;
+}
+
+.stage-select select option {
+    background: #1a1a2e;
+    color: #fff;
+}
+
+.btn {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    border: none;
+    padding: 18px 60px;
+    font-size: 20px;
+    font-weight: 600;
+    color: #fff;
+    border-radius: 30px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    box-shadow: 0 10px 30px rgba(102, 126, 234, 0.4);
+}
+
+.btn:hover {
+    transform: translateY(-3px) scale(1.05);
+    box-shadow: 0 15px 40px rgba(102, 126, 234, 0.6);
+}
+
+.btn:active {
+    transform: translateY(0) scale(1);
+}
+
+.btn-secondary {
+    background: linear-gradient(135deg, #6c757d 0%, #495057 100%);
+    box-shadow: 0 10px 30px rgba(108, 117, 125, 0.4);
+}
+
+.btn-secondary:hover {
+    box-shadow: 0 15px 40px rgba(108, 117, 125, 0.6);
+}
+
+.pause-buttons {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+}
+
+@media (max-width: 600px) {
+    .screen h1 {
+        font-size: 40px;
+    }
+
+    .screen h2 {
+        font-size: 28px;
+    }
+
+    #ui-overlay {
+        padding: 15px;
+    }
+
+    #level-display, #score-display {
+        padding: 8px 15px;
+        font-size: 14px;
+    }
+
+    .btn {
+        padding: 15px 40px;
+        font-size: 18px;
+    }
+}

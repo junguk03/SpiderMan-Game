@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+    <title>Swing Hero</title>
+    <link rel="stylesheet" href="style.css">
+    <!-- Google tag (gtag.js) -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-P3MMXBNDX5"></script>
+    <script>
+        window.dataLayer = window.dataLayer || [];
+        function gtag(){dataLayer.push(arguments);}
+        gtag('js', new Date());
+
+        gtag('config', 'G-P3MMXBNDX5');
+    </script>
+</head>
+<body>
+    <div id="game-container">
+        <canvas id="gameCanvas"></canvas>
+
+        <div id="ui-overlay">
+            <div id="level-display">Level <span id="level-num">1</span></div>
+            <div id="score-display">Stars <span id="score">0/0</span></div>
+        </div>
+
+        <div id="game-hint">
+            💡 화면이 이상하면 Ctrl+Shift+R로 새로고침
+        </div>
+
+        <div id="start-screen" class="screen">
+            <h1>Swing Hero</h1>
+            <div class="stage-select">
+                <label for="stage-selector">스테이지 선택:</label>
+                <select id="stage-selector">
+                    <option value="0">Tutorial</option>
+                </select>
+            </div>
+            <p class="warning-hint">⚠️ 새로고침(Ctrl+Shift+R)하면 게임이 초기화됩니다</p>
+            <button id="start-btn" class="btn">PLAY</button>
+        </div>
+
+        <div id="game-over-screen" class="screen hidden">
+            <h2>Game Over</h2>
+            <p>Level <span id="final-score">1</span></p>
+            <button id="retry-btn" class="btn">Retry</button>
+        </div>
+
+        <div id="level-complete-screen" class="screen hidden">
+            <h2>Level Complete!</h2>
+            <p>Level <span id="completed-level">1</span></p>
+            <button id="next-level-btn" class="btn">Next Level</button>
+        </div>
+
+        <div id="pause-screen" class="screen hidden">
+            <h2>일시정지</h2>
+            <p>Level <span id="pause-level">1</span></p>
+            <div class="pause-buttons">
+                <button id="resume-btn" class="btn">계속하기</button>
+                <button id="stage-select-btn" class="btn btn-secondary">스테이지 선택</button>
+            </div>
+        </div>
+    </div>
+
+    <script src="game.js"></script>
+</body>
+</html>

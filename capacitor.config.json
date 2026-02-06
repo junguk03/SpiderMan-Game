@@ -1,0 +1,8 @@
+{
+  "appId": "com.swinghero.game",
+  "appName": "Swing Hero",
+  "webDir": "www",
+  "server": {
+    "androidScheme": "https"
+  }
+}

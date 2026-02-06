@@ -1,0 +1,7 @@
+<?xml version='1.0' encoding='utf-8'?>
+<resources>
+    <string name="app_name">Swing Hero</string>
+    <string name="title_activity_main">Swing Hero</string>
+    <string name="package_name">com.swinghero.game</string>
+    <string name="custom_url_scheme">com.swinghero.game</string>
+</resources>
