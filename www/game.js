@@ -1578,6 +1578,7 @@ function init() {
     document.getElementById('retry-btn').addEventListener('click', restartLevel);
     document.getElementById('next-level-btn').addEventListener('click', nextLevel);
     document.getElementById('resume-btn').addEventListener('click', resumeGame);
+    document.getElementById('restart-btn').addEventListener('click', restartLevel);
     document.getElementById('stage-select-btn').addEventListener('click', goToStageSelect);
 
     // 스테이지 선택 드롭다운 채우기
@@ -1651,6 +1652,12 @@ function goToStageSelect() {
     // 현재 레벨을 선택 상태로 설정
     document.getElementById('stage-selector').value = currentLevel;
     gameState = 'start';
+}
+
+function restartLevel() {
+    document.getElementById('pause-screen').classList.add('hidden');
+    loadLevel(currentLevel);
+    gameState = 'playing';
 }
 
 function loadLevel(num) {

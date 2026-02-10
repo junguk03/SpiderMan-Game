@@ -16,6 +16,17 @@
     </script>
 </head>
 <body>
+    <!-- 스플래시 로딩 화면 -->
+    <div id="splash-screen">
+        <div class="splash-content">
+            <h1 class="splash-title">SWING HERO</h1>
+            <div class="splash-loader">
+                <div class="loader-bar"></div>
+            </div>
+            <p class="splash-text">Loading...</p>
+        </div>
+    </div>
+
     <div id="game-container">
         <canvas id="gameCanvas"></canvas>
 
@@ -24,11 +35,7 @@
             <div id="score-display">Stars <span id="score">0/0</span></div>
         </div>
 
-        <div id="game-hint">
-            💡 화면이 이상하면 Ctrl+Shift+R로 새로고침
-        </div>
-
-        <div id="start-screen" class="screen">
+        <div id="start-screen" class="screen hidden">
             <h1>Swing Hero</h1>
             <div class="stage-select">
                 <label for="stage-selector">스테이지 선택:</label>
@@ -36,7 +43,6 @@
                     <option value="0">Tutorial</option>
                 </select>
             </div>
-            <p class="warning-hint">⚠️ 새로고침(Ctrl+Shift+R)하면 게임이 초기화됩니다</p>
             <button id="start-btn" class="btn">PLAY</button>
         </div>
 
@@ -57,6 +63,7 @@
             <p>Level <span id="pause-level">1</span></p>
             <div class="pause-buttons">
                 <button id="resume-btn" class="btn">계속하기</button>
+                <button id="restart-btn" class="btn btn-secondary">다시하기</button>
                 <button id="stage-select-btn" class="btn btn-secondary">스테이지 선택</button>
             </div>
         </div>
