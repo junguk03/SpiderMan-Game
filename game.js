@@ -2396,7 +2396,18 @@ function gameLoop() {
     requestAnimationFrame(gameLoop);
 }
 
-document.addEventListener('DOMContentLoaded', init);
+document.addEventListener('DOMContentLoaded', () => {
+    init();
+    // 스플래시 화면 숨기기 (1.5초 후)
+    setTimeout(() => {
+        const splash = document.getElementById('splash-screen');
+        if (splash) {
+            splash.classList.add('hidden');
+            // 시작 화면 보이기
+            document.getElementById('start-screen').classList.remove('hidden');
+        }
+    }, 1500);
+});
 
 // ==================== REFRESH WARNING ====================
 // 게임 진행 중 새로고침 시 경고 메시지 표시

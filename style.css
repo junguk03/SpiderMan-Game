@@ -11,6 +11,72 @@ body {
     overflow: hidden;
 }
 
+/* 스플래시 로딩 화면 */
+#splash-screen {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    background: linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0f0f23 100%);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 9999;
+    transition: opacity 0.5s ease, visibility 0.5s ease;
+}
+
+#splash-screen.hidden {
+    opacity: 0;
+    visibility: hidden;
+}
+
+.splash-content {
+    text-align: center;
+}
+
+.splash-title {
+    font-size: 3rem;
+    font-weight: bold;
+    color: #fff;
+    text-shadow: 0 0 20px #4a9eff, 0 0 40px #4a9eff, 0 0 60px #4a9eff;
+    margin-bottom: 40px;
+    animation: glow 2s ease-in-out infinite alternate;
+}
+
+@keyframes glow {
+    from { text-shadow: 0 0 20px #4a9eff, 0 0 40px #4a9eff; }
+    to { text-shadow: 0 0 30px #4a9eff, 0 0 60px #4a9eff, 0 0 80px #4a9eff; }
+}
+
+.splash-loader {
+    width: 200px;
+    height: 6px;
+    background: rgba(255,255,255,0.1);
+    border-radius: 3px;
+    margin: 0 auto 20px;
+    overflow: hidden;
+}
+
+.loader-bar {
+    width: 0%;
+    height: 100%;
+    background: linear-gradient(90deg, #4a9eff, #00d4ff);
+    border-radius: 3px;
+    animation: loading 1.5s ease-in-out forwards;
+}
+
+@keyframes loading {
+    0% { width: 0%; }
+    100% { width: 100%; }
+}
+
+.splash-text {
+    color: rgba(255,255,255,0.6);
+    font-size: 1rem;
+    letter-spacing: 3px;
+}
+
 #game-container {
     position: fixed;
     top: 0;

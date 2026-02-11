@@ -16,6 +16,17 @@
     </script>
 </head>
 <body>
+    <!-- 스플래시 로딩 화면 -->
+    <div id="splash-screen">
+        <div class="splash-content">
+            <h1 class="splash-title">SWING HERO</h1>
+            <div class="splash-loader">
+                <div class="loader-bar"></div>
+            </div>
+            <p class="splash-text">Loading...</p>
+        </div>
+    </div>
+
     <div id="game-container">
         <canvas id="gameCanvas"></canvas>
 
@@ -24,7 +35,7 @@
             <div id="score-display">Stars <span id="score">0/0</span></div>
         </div>
 
-        <div id="start-screen" class="screen">
+        <div id="start-screen" class="screen hidden">
             <h1>Swing Hero</h1>
             <div class="stage-select">
                 <label for="stage-selector">스테이지 선택:</label>
