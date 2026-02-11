@@ -2077,7 +2077,7 @@ function updateCamera() {
     const targetY = player.y - canvas.height / 2;
     camera.x += (targetX - camera.x) * 0.08;
     camera.y += (targetY - camera.y) * 0.08;
-    camera.x = Math.max(0, camera.x);
+    // 카메라 x 제한 제거 - 음수 좌표 레벨 지원
 }
 
 // ==================== RENDERING ====================
