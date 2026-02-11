@@ -2267,37 +2267,103 @@ function drawPlayer() {
     ctx.shadowBlur = 10;
 
     const head = 8, body = 18, limb = 14;
-    let arm = 0.5, leg = 0.3;
+    let armL = 0.5, armR = 0.5, legL = 0.3, legR = 0.3;
+    let bodyTilt = 0;
+    let headOffset = 0;
 
-    if (grapple.attached) arm = -0.8;
-    else if (!player.onGround) { arm = 0.8; leg = 0.5; }
-    else if (Math.abs(player.vx) > 1) {
-        const t = Date.now() * 0.015;
-        arm = Math.sin(t) * 0.5;
-        leg = Math.sin(t) * 0.4;
+    const t = Date.now() * 0.012;
+    const speed = Math.abs(player.vx);
+
+    if (grapple.attached) {
+        // 줄타기: 몸이 줄 방향으로 기울어짐
+        const ropeAngle = Math.atan2(
+            grapple.anchorY - (player.y + 5),
+            grapple.anchorX - (player.x + player.width / 2)
+        );
+        bodyTilt = Math.sin(ropeAngle) * 0.3;
+        armL = -1.2;
+        armR = -1.0;
+        legL = 0.4 + Math.sin(t * 2) * 0.2;
+        legR = 0.4 - Math.sin(t * 2) * 0.2;
+    } else if (player.onWall !== 0) {
+        // 벽타기: 벽에 붙은 자세
+        armL = -0.3;
+        armR = -0.5;
+        legL = 0.2;
+        legR = 0.5;
+        bodyTilt = player.onWall * 0.15;
+    } else if (!player.onGround) {
+        if (player.vy < -5) {
+            // 점프 상승: 팔 위로, 다리 웅크림
+            armL = -0.6;
+            armR = -0.4;
+            legL = 0.8;
+            legR = 0.9;
+        } else if (player.vy > 3) {
+            // 낙하: 팔 벌리고, 다리 펴짐
+            armL = 1.0 + Math.sin(t * 3) * 0.2;
+            armR = 1.2 + Math.sin(t * 3 + 1) * 0.2;
+            legL = 0.2;
+            legR = 0.4;
+        } else {
+            // 공중 유지
+            armL = 0.8;
+            armR = 0.9;
+            legL = 0.5;
+            legR = 0.6;
+        }
+    } else if (speed > 0.5) {
+        // 걷기/뛰기 애니메이션
+        const walkSpeed = speed > 3 ? 0.025 : 0.018;
+        const walkT = Date.now() * walkSpeed;
+        const intensity = Math.min(speed / 4, 1);
+
+        // 팔다리 교차 움직임
+        armL = Math.sin(walkT) * 0.7 * intensity;
+        armR = Math.sin(walkT + Math.PI) * 0.7 * intensity;
+        legL = Math.sin(walkT + Math.PI) * 0.5 * intensity;
+        legR = Math.sin(walkT) * 0.5 * intensity;
+
+        // 달릴 때 몸 약간 앞으로
+        bodyTilt = intensity * 0.1;
+        headOffset = Math.sin(walkT * 2) * 1.5 * intensity;
+    } else {
+        // 서있기: 가만히 숨쉬는 모션
+        const breathe = Math.sin(t * 0.5) * 0.05;
+        armL = 0.4 + breathe;
+        armR = 0.5 + breathe;
+        legL = 0.2;
+        legR = 0.25;
     }
 
+    // 몸 기울기 적용
+    ctx.rotate(bodyTilt);
+
+    // 머리
     ctx.beginPath();
-    ctx.arc(0, -body - head, head, 0, Math.PI * 2);
+    ctx.arc(0, -body - head + headOffset, head, 0, Math.PI * 2);
     ctx.fill();
 
+    // 몸통
     ctx.beginPath();
     ctx.moveTo(0, -body);
     ctx.lineTo(0, 0);
     ctx.stroke();
 
+    // 팔
     ctx.beginPath();
     ctx.moveTo(0, -body + 3);
-    ctx.lineTo(limb * Math.cos(arm), -body + 3 + limb * Math.sin(arm));
+    ctx.lineTo(limb * Math.cos(armL), -body + 3 + limb * Math.sin(armL));
     ctx.moveTo(0, -body + 3);
-    ctx.lineTo(limb * Math.cos(-arm + 0.2), -body + 3 + limb * Math.sin(-arm + 0.2));
+    ctx.lineTo(-limb * Math.cos(armR), -body + 3 + limb * Math.sin(armR));
     ctx.stroke();
 
+    // 다리
     ctx.beginPath();
     ctx.moveTo(0, 0);
-    ctx.lineTo(limb * Math.cos(0.3 + leg), limb * Math.sin(0.3 + leg) + 3);
+    ctx.lineTo(limb * 0.9 * Math.cos(0.3 + legL), limb * 0.9 * Math.sin(0.3 + legL) + 3);
     ctx.moveTo(0, 0);
-    ctx.lineTo(limb * Math.cos(0.3 - leg), limb * Math.sin(0.3 - leg) + 3);
+    ctx.lineTo(-limb * 0.9 * Math.cos(0.3 + legR), limb * 0.9 * Math.sin(0.3 + legR) + 3);
     ctx.stroke();
 
     ctx.restore();
