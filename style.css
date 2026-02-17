@@ -287,57 +287,30 @@ body {
     touch-action: none;
 }
 
-/* 이동 버튼 - 왼쪽 아래 */
-.ctrl-move {
-    width: 64px;
-    height: 64px;
-    bottom: 30px;
-    background: rgba(255, 255, 255, 0.15);
-    border: 2px solid rgba(255, 255, 255, 0.3);
-    color: #fff;
-    font-size: 24px;
-}
-
-.ctrl-move:active, .ctrl-move.active {
-    background: rgba(255, 255, 255, 0.35);
-    border-color: rgba(255, 255, 255, 0.6);
-}
-
-#move-left { left: 20px; }
-#move-right { left: 100px; }
-
-/* 액션 버튼 - 오른쪽 */
+/* 통합 액션 버튼 (점프/줄) - 오른쪽 아래 */
 .ctrl-action {
-    width: 60px;
-    height: 60px;
-    background: rgba(255, 255, 255, 0.15);
-    border: 2px solid rgba(255, 255, 255, 0.3);
+    width: 70px;
+    height: 70px;
+    right: 25px;
+    bottom: 25px;
+    background: rgba(255, 255, 255, 0.2);
+    border: 2px solid rgba(255, 255, 255, 0.4);
     color: #fff;
-    font-size: 14px;
+    font-size: 15px;
     font-weight: bold;
 }
 
 .ctrl-action:active, .ctrl-action.active {
-    background: rgba(255, 255, 255, 0.35);
-    border-color: rgba(255, 255, 255, 0.6);
+    background: rgba(255, 255, 255, 0.45);
+    border-color: rgba(255, 255, 255, 0.7);
 }
 
-#jump-btn {
-    right: 25px;
-    bottom: 30px;
-}
-
-#grapple-btn {
-    right: 25px;
-    bottom: 110px;
-}
-
-/* 메뉴 버튼 - 오른쪽 위 */
+/* 메뉴 버튼 - 왼쪽 위 */
 .ctrl-menu {
     width: 44px;
     height: 44px;
     top: 15px;
-    right: 15px;
+    left: 15px;
     background: rgba(0, 0, 0, 0.4);
     border: 1px solid rgba(255, 255, 255, 0.2);
     color: #fff;

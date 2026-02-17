@@ -1843,13 +1843,14 @@ function updatePhysics() {
     updateMovingPlatforms();
 
     // Movement
+    const speed = isMobile ? CONFIG.moveSpeed * 0.7 : CONFIG.moveSpeed;
     if (!grapple.attached) {
         if (keys.left) {
-            player.vx = -CONFIG.moveSpeed;
+            player.vx = -speed;
             player.facingRight = false;
             tutorialActions.moved = true;
         } else if (keys.right) {
-            player.vx = CONFIG.moveSpeed;
+            player.vx = speed;
             player.facingRight = true;
             tutorialActions.moved = true;
         } else {
@@ -2496,57 +2497,121 @@ function initMobileControls() {
         }
     }
 
-    function addBtn(id, onStart, onEnd) {
-        const el = document.getElementById(id);
-        if (!el) return;
-        el.addEventListener('touchstart', (e) => { e.preventDefault(); e.stopPropagation(); el.classList.add('active'); onStart(); }, { passive: false });
-        el.addEventListener('touchend', (e) => { e.preventDefault(); e.stopPropagation(); el.classList.remove('active'); onEnd(); }, { passive: false });
-        el.addEventListener('touchcancel', (e) => { el.classList.remove('active'); onEnd(); });
+    // 통합 액션 버튼 (땅=점프, 공중=줄)
+    const actionBtn = document.getElementById('action-btn');
+    const actionLabel = document.getElementById('action-label');
+    const actionIconJump = document.getElementById('action-icon-jump');
+    const actionIconGrapple = document.getElementById('action-icon-grapple');
+    let lastActionMode = 'jump';
+
+    // 버튼 상태 업데이트 (매 프레임)
+    function updateActionButton() {
+        const mode = player.onGround ? 'jump' : 'grapple';
+        if (mode !== lastActionMode) {
+            lastActionMode = mode;
+            if (mode === 'jump') {
+                actionLabel.textContent = '점프';
+                if (actionIconJump) actionIconJump.style.display = 'none';
+                if (actionIconGrapple) actionIconGrapple.style.display = 'none';
+                actionLabel.style.display = '';
+            } else {
+                actionLabel.style.display = 'none';
+                if (actionIconJump) actionIconJump.style.display = 'none';
+                if (actionIconGrapple) actionIconGrapple.style.display = '';
+            }
+        }
+        requestAnimationFrame(updateActionButton);
+    }
+    updateActionButton();
+
+    if (actionBtn) {
+        actionBtn.addEventListener('touchstart', (e) => {
+            e.preventDefault();
+            e.stopPropagation();
+            actionBtn.classList.add('active');
+            if (player.onGround) {
+                keys.jump = true;
+            } else {
+                keys.grapple = true;
+                aimNearestAnchor();
+                if (gameState === 'playing') shootGrapple();
+            }
+        }, { passive: false });
+        actionBtn.addEventListener('touchend', (e) => {
+            e.preventDefault();
+            e.stopPropagation();
+            actionBtn.classList.remove('active');
+            keys.jump = false;
+            keys.grapple = false;
+            releaseGrapple();
+        }, { passive: false });
+        actionBtn.addEventListener('touchcancel', () => {
+            actionBtn.classList.remove('active');
+            keys.jump = false;
+            keys.grapple = false;
+            releaseGrapple();
+        });
     }
 
-    // 이동 버튼
-    addBtn('move-left',
-        () => { keys.left = true; },
-        () => { keys.left = false; }
-    );
-    addBtn('move-right',
-        () => { keys.right = true; },
-        () => { keys.right = false; }
-    );
-
-    // 점프 버튼
-    addBtn('jump-btn',
-        () => { keys.jump = true; },
-        () => { keys.jump = false; }
-    );
-
-    // 줄 버튼 - 가장 가까운 앵커를 향해 발사
-    addBtn('grapple-btn',
-        () => {
-            keys.grapple = true;
-            aimNearestAnchor();
-            if (gameState === 'playing') shootGrapple();
-        },
-        () => { keys.grapple = false; releaseGrapple(); }
-    );
-
-    // 캔버스 터치로 줄 조준 방향 설정
+    // 화면 좌우 절반 터치로 이동
+    let moveTouchId = null;
     canvas.addEventListener('touchstart', (e) => {
-        e.preventDefault();
-        const touch = e.touches[0];
-        const rect = canvas.getBoundingClientRect();
-        mouseX = (touch.clientX - rect.left) / rect.width * canvas.width + camera.x;
-        mouseY = (touch.clientY - rect.top) / rect.height * canvas.height + camera.y;
-    }, { passive: false });
-    canvas.addEventListener('touchmove', (e) => {
-        e.preventDefault();
-        const touch = e.touches[0];
-        const rect = canvas.getBoundingClientRect();
-        mouseX = (touch.clientX - rect.left) / rect.width * canvas.width + camera.x;
-        mouseY = (touch.clientY - rect.top) / rect.height * canvas.height + camera.y;
+        if (gameState !== 'playing') return;
+        for (let i = 0; i < e.changedTouches.length; i++) {
+            const touch = e.changedTouches[i];
+            // 오른쪽 하단 액션 버튼 영역 무시 (우측 25% + 하단 30%)
+            const rx = touch.clientX / window.innerWidth;
+            const ry = touch.clientY / window.innerHeight;
+            if (rx > 0.75 && ry > 0.5) continue;
+            // 왼쪽 상단 메뉴 버튼 영역 무시
+            if (rx < 0.15 && ry < 0.15) continue;
+
+            e.preventDefault();
+            moveTouchId = touch.identifier;
+            const half = window.innerWidth / 2;
+            if (touch.clientX < half) {
+                keys.left = true; keys.right = false;
+            } else {
+                keys.right = true; keys.left = false;
+            }
+        }
     }, { passive: false });
 
-    // 메뉴 버튼
+    canvas.addEventListener('touchmove', (e) => {
+        if (gameState !== 'playing') return;
+        for (let i = 0; i < e.changedTouches.length; i++) {
+            const touch = e.changedTouches[i];
+            if (touch.identifier === moveTouchId) {
+                e.preventDefault();
+                const half = window.innerWidth / 2;
+                if (touch.clientX < half) {
+                    keys.left = true; keys.right = false;
+                } else {
+                    keys.right = true; keys.left = false;
+                }
+            }
+        }
+    }, { passive: false });
+
+    canvas.addEventListener('touchend', (e) => {
+        for (let i = 0; i < e.changedTouches.length; i++) {
+            if (e.changedTouches[i].identifier === moveTouchId) {
+                moveTouchId = null;
+                keys.left = false; keys.right = false;
+            }
+        }
+    }, { passive: false });
+
+    canvas.addEventListener('touchcancel', (e) => {
+        for (let i = 0; i < e.changedTouches.length; i++) {
+            if (e.changedTouches[i].identifier === moveTouchId) {
+                moveTouchId = null;
+                keys.left = false; keys.right = false;
+            }
+        }
+    }, { passive: false });
+
+    // 메뉴 버튼 (왼쪽 위 ☰)
     const menuBtn = document.getElementById('menu-btn');
     if (menuBtn) {
         menuBtn.addEventListener('touchstart', (e) => {
@@ -2556,6 +2621,18 @@ function initMobileControls() {
             else if (gameState === 'paused') resumeGame();
         }, { passive: false });
     }
+
+    // 풀스크린 (상태바/내비게이션바 숨기기)
+    function requestFullscreen() {
+        const el = document.documentElement;
+        if (el.requestFullscreen) el.requestFullscreen();
+        else if (el.webkitRequestFullscreen) el.webkitRequestFullscreen();
+    }
+    // 첫 터치 시 풀스크린 시도
+    document.addEventListener('touchstart', function onFirstTouch() {
+        requestFullscreen();
+        document.removeEventListener('touchstart', onFirstTouch);
+    }, { once: true });
 }
 
 // ==================== GAME LOOP ====================

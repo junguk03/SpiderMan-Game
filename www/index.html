@@ -70,21 +70,17 @@
 
         <!-- 모바일 터치 컨트롤 -->
         <div id="mobile-controls">
-            <!-- 왼쪽: 이동 버튼 -->
-            <div id="move-left" class="ctrl-btn ctrl-move">◀</div>
-            <div id="move-right" class="ctrl-btn ctrl-move">▶</div>
-            <!-- 오른쪽 위: 줄 버튼 -->
-            <div id="grapple-btn" class="ctrl-btn ctrl-action">
-                <svg viewBox="0 0 40 40" width="32" height="32">
+            <!-- 왼쪽 위: 메뉴 버튼 -->
+            <div id="menu-btn" class="ctrl-btn ctrl-menu">☰</div>
+            <!-- 오른쪽 아래: 통합 액션 버튼 (점프/줄) -->
+            <div id="action-btn" class="ctrl-btn ctrl-action">
+                <span id="action-label">점프</span>
+                <svg id="action-icon-grapple" style="display:none" viewBox="0 0 40 40" width="32" height="32">
                     <circle cx="20" cy="8" r="6" fill="none" stroke="#fff" stroke-width="2"/>
                     <line x1="20" y1="14" x2="20" y2="36" stroke="#fff" stroke-width="2"/>
                     <line x1="14" y1="36" x2="26" y2="36" stroke="#fff" stroke-width="2"/>
                 </svg>
             </div>
-            <!-- 오른쪽 아래: 점프 버튼 -->
-            <div id="jump-btn" class="ctrl-btn ctrl-action">점프</div>
-            <!-- 오른쪽 위: 메뉴 버튼 -->
-            <div id="menu-btn" class="ctrl-btn ctrl-menu">☰</div>
         </div>
     </div>
 
