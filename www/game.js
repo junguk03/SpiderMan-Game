@@ -24,6 +24,7 @@ let collectedStars = 0;
 
 const keys = { left: false, right: false, jump: false, grapple: false };
 let mouseX = 0, mouseY = 0;
+let isMobile = false;
 
 let player = {
     x: 0, y: 0, vx: 0, vy: 0,
@@ -1557,8 +1558,9 @@ function init() {
         if (e.button === 0) { keys.grapple = false; releaseGrapple(); }
     });
 
-    // Touch
+    // Touch - 캔버스 터치로 줄 조준 (모바일이 아닐 때)
     canvas.addEventListener('touchstart', (e) => {
+        if (isMobile) return; // 모바일은 버튼으로 처리
         e.preventDefault();
         const touch = e.touches[0];
         const rect = canvas.getBoundingClientRect();
@@ -1568,10 +1570,15 @@ function init() {
         if (gameState === 'playing') shootGrapple();
     }, { passive: false });
     canvas.addEventListener('touchend', (e) => {
+        if (isMobile) return;
         e.preventDefault();
         keys.grapple = false;
         releaseGrapple();
     }, { passive: false });
+
+    // 모바일 감지 & 컨트롤 초기화
+    isMobile = /Android|iPhone|iPad|iPod/i.test(navigator.userAgent) || ('ontouchstart' in window && window.innerWidth < 1200);
+    if (isMobile) initMobileControls();
 
     // Buttons
     document.getElementById('start-btn').addEventListener('click', startGame);
@@ -2371,13 +2378,23 @@ function drawPlayer() {
 
 function drawTutorial() {
     let msg = '';
-    if (!tutorialActions.moved) msg = 'A / D 키로 좌우 이동';
-    else if (!tutorialActions.jumped) msg = 'Space로 점프';
-    else if (!tutorialActions.grappled) msg = '파란 공을 향해 마우스 클릭으로 줄 발사';
-    else if (!tutorialActions.swung) msg = '매달린 상태에서 A / D로 흔들기';
-    else if (!tutorialActions.collected) msg = '별을 모아 문을 열어요';
-    else if (collectedStars < totalStars) msg = '남은 별을 모두 모으세요';
-    else msg = '초록색 문으로 들어가세요!';
+    if (isMobile) {
+        if (!tutorialActions.moved) msg = '◀ ▶ 버튼으로 좌우 이동';
+        else if (!tutorialActions.jumped) msg = '점프 버튼을 누르세요';
+        else if (!tutorialActions.grappled) msg = '파란 공 근처에서 줄 버튼 터치!';
+        else if (!tutorialActions.swung) msg = '매달린 상태에서 ◀ ▶로 흔들기';
+        else if (!tutorialActions.collected) msg = '별을 모아 문을 열어요';
+        else if (collectedStars < totalStars) msg = '남은 별을 모두 모으세요';
+        else msg = '초록색 문으로 들어가세요!';
+    } else {
+        if (!tutorialActions.moved) msg = 'A / D 키로 좌우 이동';
+        else if (!tutorialActions.jumped) msg = 'Space로 점프';
+        else if (!tutorialActions.grappled) msg = '파란 공을 향해 마우스 클릭으로 줄 발사';
+        else if (!tutorialActions.swung) msg = '매달린 상태에서 A / D로 흔들기';
+        else if (!tutorialActions.collected) msg = '별을 모아 문을 열어요';
+        else if (collectedStars < totalStars) msg = '남은 별을 모두 모으세요';
+        else msg = '초록색 문으로 들어가세요!';
+    }
 
     ctx.fillStyle = 'rgba(0, 0, 0, 0.7)';
     const w = 450, h = 50;
@@ -2455,6 +2472,92 @@ function updateUI() {
     document.getElementById('score').textContent = `${collectedStars}/${totalStars}`;
 }
 
+// ==================== MOBILE CONTROLS ====================
+function initMobileControls() {
+    const controls = document.getElementById('mobile-controls');
+    if (!controls) return;
+    controls.style.display = 'block';
+
+    // 줄 조준용: 가장 가까운 앵커를 향해 자동 조준
+    function aimNearestAnchor() {
+        const px = player.x + player.width / 2;
+        const py = player.y + player.height / 2;
+        let nearest = null, minDist = Infinity;
+        for (const a of anchors) {
+            const dist = Math.hypot(a.x - px, a.y - py);
+            if (dist < CONFIG.maxRopeLength && dist < minDist) {
+                minDist = dist;
+                nearest = a;
+            }
+        }
+        if (nearest) {
+            mouseX = nearest.x;
+            mouseY = nearest.y;
+        }
+    }
+
+    function addBtn(id, onStart, onEnd) {
+        const el = document.getElementById(id);
+        if (!el) return;
+        el.addEventListener('touchstart', (e) => { e.preventDefault(); e.stopPropagation(); el.classList.add('active'); onStart(); }, { passive: false });
+        el.addEventListener('touchend', (e) => { e.preventDefault(); e.stopPropagation(); el.classList.remove('active'); onEnd(); }, { passive: false });
+        el.addEventListener('touchcancel', (e) => { el.classList.remove('active'); onEnd(); });
+    }
+
+    // 이동 버튼
+    addBtn('move-left',
+        () => { keys.left = true; },
+        () => { keys.left = false; }
+    );
+    addBtn('move-right',
+        () => { keys.right = true; },
+        () => { keys.right = false; }
+    );
+
+    // 점프 버튼
+    addBtn('jump-btn',
+        () => { keys.jump = true; },
+        () => { keys.jump = false; }
+    );
+
+    // 줄 버튼 - 가장 가까운 앵커를 향해 발사
+    addBtn('grapple-btn',
+        () => {
+            keys.grapple = true;
+            aimNearestAnchor();
+            if (gameState === 'playing') shootGrapple();
+        },
+        () => { keys.grapple = false; releaseGrapple(); }
+    );
+
+    // 캔버스 터치로 줄 조준 방향 설정
+    canvas.addEventListener('touchstart', (e) => {
+        e.preventDefault();
+        const touch = e.touches[0];
+        const rect = canvas.getBoundingClientRect();
+        mouseX = (touch.clientX - rect.left) / rect.width * canvas.width + camera.x;
+        mouseY = (touch.clientY - rect.top) / rect.height * canvas.height + camera.y;
+    }, { passive: false });
+    canvas.addEventListener('touchmove', (e) => {
+        e.preventDefault();
+        const touch = e.touches[0];
+        const rect = canvas.getBoundingClientRect();
+        mouseX = (touch.clientX - rect.left) / rect.width * canvas.width + camera.x;
+        mouseY = (touch.clientY - rect.top) / rect.height * canvas.height + camera.y;
+    }, { passive: false });
+
+    // 메뉴 버튼
+    const menuBtn = document.getElementById('menu-btn');
+    if (menuBtn) {
+        menuBtn.addEventListener('touchstart', (e) => {
+            e.preventDefault();
+            e.stopPropagation();
+            if (gameState === 'playing') pauseGame();
+            else if (gameState === 'paused') resumeGame();
+        }, { passive: false });
+    }
+}
+
 // ==================== GAME LOOP ====================
 function gameLoop() {
     if (gameState === 'playing') updatePhysics();
@@ -2475,14 +2578,3 @@ document.addEventListener('DOMContentLoaded', () => {
     }, 1500);
 });
 
-// ==================== REFRESH WARNING ====================
-// 게임 진행 중 새로고침 시 경고 메시지 표시
-window.addEventListener('beforeunload', function(e) {
-    // 게임이 시작 화면이 아닌 경우에만 경고 표시
-    if (gameState === 'playing' || gameState === 'levelComplete' || gameState === 'paused') {
-        e.preventDefault();
-        // 표준 방식으로 경고 메시지 설정
-        e.returnValue = '게임 진행 상황이 초기화됩니다. 정말 나가시겠습니까?';
-        return e.returnValue;
-    }
-});
