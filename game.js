@@ -1,17 +1,23 @@
 // ==================== GAME CONFIGURATION ====================
 const CONFIG = {
     gravity: 0.5,
+    mobileGravity: 0.25,
     friction: 0.85,
     airResistance: 0.99,
+    mobileAirResistance: 0.96,
     playerWidth: 20,
     playerHeight: 40,
     moveSpeed: 5,
     jumpForce: -13,
+    mobileJumpForce: -9,
     wallSlideSpeed: 2,
     wallJumpForce: { x: 10, y: -11 },
+    mobileWallJumpForce: { x: 7, y: -7.5 },
     ropeSpeed: 30,
     swingForce: 0.35,
+    mobileSwingForce: 0.2,
     swingDamping: 0.98,
+    mobileSwingDamping: 0.96,
     maxRopeLength: 350
 };
 
@@ -2059,6 +2065,8 @@ function startGame() {
 
 function restartLevel() {
     document.getElementById('game-over-screen').classList.add('hidden');
+    document.getElementById('pause-screen').classList.add('hidden');
+    document.getElementById('level-complete-screen').classList.add('hidden');
     loadLevel(currentLevel);
     gameState = 'playing';
 }
@@ -2311,17 +2319,34 @@ function updatePhysics() {
 
     // Movement
     const speed = isMobile ? CONFIG.moveSpeed * 0.7 : CONFIG.moveSpeed;
+    const airRes = isMobile ? CONFIG.mobileAirResistance : CONFIG.airResistance;
+    const swingF = isMobile ? CONFIG.mobileSwingForce : CONFIG.swingForce;
+    const swingD = isMobile ? CONFIG.mobileSwingDamping : CONFIG.swingDamping;
     if (!grapple.attached) {
         if (keys.left) {
-            player.vx = -speed;
+            if (player.onGround) {
+                player.vx = -speed;
+            } else if (isMobile) {
+                player.vx += -speed * 0.08;
+                player.vx = Math.max(player.vx, -speed * 0.8);
+            } else {
+                player.vx = -speed;
+            }
             player.facingRight = false;
             tutorialActions.moved = true;
         } else if (keys.right) {
-            player.vx = speed;
+            if (player.onGround) {
+                player.vx = speed;
+            } else if (isMobile) {
+                player.vx += speed * 0.08;
+                player.vx = Math.min(player.vx, speed * 0.8);
+            } else {
+                player.vx = speed;
+            }
             player.facingRight = true;
             tutorialActions.moved = true;
         } else {
-            player.vx *= player.onGround ? CONFIG.friction : CONFIG.airResistance;
+            player.vx *= player.onGround ? CONFIG.friction : airRes;
         }
     } else {
         // Swing (pendulum style)
@@ -2331,21 +2356,22 @@ function updatePhysics() {
 
         // Apply swing force with damping (A=왼쪽, D=오른쪽)
         if (keys.left) {
-            player.vx -= CONFIG.swingForce * 1.5;
+            player.vx -= swingF * 1.5;
             tutorialActions.swung = true;
         }
         if (keys.right) {
-            player.vx += CONFIG.swingForce * 1.5;
+            player.vx += swingF * 1.5;
             tutorialActions.swung = true;
         }
 
         // Apply damping for smoother swing
-        player.vx *= CONFIG.swingDamping;
-        player.vy *= CONFIG.swingDamping;
+        player.vx *= swingD;
+        player.vy *= swingD;
     }
 
     // Gravity
-    player.vy += CONFIG.gravity;
+    const grav = isMobile ? CONFIG.mobileGravity : CONFIG.gravity;
+    player.vy += grav;
 
     // Wall slide
     if (player.onWall !== 0 && player.vy > 0 && !player.onGround) {
@@ -2353,14 +2379,16 @@ function updatePhysics() {
     }
 
     // Jump
+    const jForce = isMobile ? CONFIG.mobileJumpForce : CONFIG.jumpForce;
+    const wjForce = isMobile ? CONFIG.mobileWallJumpForce : CONFIG.wallJumpForce;
     if (keys.jump && player.wallJumpCooldown <= 0) {
         if (player.onGround) {
-            player.vy = CONFIG.jumpForce;
+            player.vy = jForce;
             player.onGround = false;
             tutorialActions.jumped = true;
         } else if (player.onWall !== 0) {
-            player.vx = CONFIG.wallJumpForce.x * -player.onWall;
-            player.vy = CONFIG.wallJumpForce.y;
+            player.vx = wjForce.x * -player.onWall;
+            player.vy = wjForce.y;
             player.wallJumpCooldown = 10;
             player.facingRight = player.onWall < 0;
             tutorialActions.wallJumped = true;
@@ -3036,23 +3064,19 @@ function initMobileControls() {
     // 통합 액션 버튼 (땅=점프, 공중=줄)
     const actionBtn = document.getElementById('action-btn');
     const actionLabel = document.getElementById('action-label');
-    const actionIconJump = document.getElementById('action-icon-jump');
     const actionIconGrapple = document.getElementById('action-icon-grapple');
     let lastActionMode = 'jump';
 
-    // 버튼 상태 업데이트 (매 프레임)
     function updateActionButton() {
         const mode = player.onGround ? 'jump' : 'grapple';
         if (mode !== lastActionMode) {
             lastActionMode = mode;
             if (mode === 'jump') {
                 actionLabel.textContent = '점프';
-                if (actionIconJump) actionIconJump.style.display = 'none';
                 if (actionIconGrapple) actionIconGrapple.style.display = 'none';
                 actionLabel.style.display = '';
             } else {
                 actionLabel.style.display = 'none';
-                if (actionIconJump) actionIconJump.style.display = 'none';
                 if (actionIconGrapple) actionIconGrapple.style.display = '';
             }
         }
@@ -3089,26 +3113,71 @@ function initMobileControls() {
         });
     }
 
-    // 화면 좌우 절반 터치로 이동
-    let moveTouchId = null;
+    // ===== 가상 조이스틱 =====
+    const joystickBase = document.getElementById('joystick-base');
+    const joystickThumb = document.getElementById('joystick-thumb');
+    let joyTouchId = null;
+    let joyOriginX = 0, joyOriginY = 0;
+    const joyMaxDist = 50; // 조이스틱 최대 이동 거리
+
+    function showJoystick(x, y) {
+        joystickBase.style.display = 'block';
+        joystickBase.style.left = x + 'px';
+        joystickBase.style.top = y + 'px';
+        joystickThumb.style.left = '50%';
+        joystickThumb.style.top = '50%';
+    }
+
+    function hideJoystick() {
+        joystickBase.style.display = 'none';
+        keys.left = false;
+        keys.right = false;
+    }
+
+    function updateJoystick(touchX, touchY) {
+        const dx = touchX - joyOriginX;
+        const dy = touchY - joyOriginY;
+        const dist = Math.sqrt(dx * dx + dy * dy);
+        const clampDist = Math.min(dist, joyMaxDist);
+        const angle = Math.atan2(dy, dx);
+        const clampX = Math.cos(angle) * clampDist;
+        const clampY = Math.sin(angle) * clampDist;
+
+        // 조이스틱 썸 위치 업데이트
+        joystickThumb.style.left = (50 + (clampX / joyMaxDist) * 40) + '%';
+        joystickThumb.style.top = (50 + (clampY / joyMaxDist) * 40) + '%';
+
+        // 좌우 이동 판단 (수평 성분 기준)
+        if (Math.abs(dx) > 10) {
+            if (dx < 0) {
+                keys.left = true; keys.right = false;
+            } else {
+                keys.right = true; keys.left = false;
+            }
+        } else {
+            keys.left = false; keys.right = false;
+        }
+    }
+
+    // 왼쪽 절반에서 터치 시작 → 조이스틱 표시
     canvas.addEventListener('touchstart', (e) => {
         if (gameState !== 'playing') return;
         for (let i = 0; i < e.changedTouches.length; i++) {
             const touch = e.changedTouches[i];
-            // 오른쪽 하단 액션 버튼 영역 무시 (우측 25% + 하단 30%)
             const rx = touch.clientX / window.innerWidth;
             const ry = touch.clientY / window.innerHeight;
+            // 오른쪽 하단 액션 버튼 영역 무시
             if (rx > 0.75 && ry > 0.5) continue;
-            // 왼쪽 상단 메뉴 버튼 영역 무시
-            if (rx < 0.15 && ry < 0.15) continue;
+            // 왼쪽 상단 메뉴/레벨 영역 무시
+            if (ry < 0.12) continue;
 
-            e.preventDefault();
-            moveTouchId = touch.identifier;
-            const half = window.innerWidth / 2;
-            if (touch.clientX < half) {
-                keys.left = true; keys.right = false;
-            } else {
-                keys.right = true; keys.left = false;
+            if (joyTouchId === null) {
+                e.preventDefault();
+                joyTouchId = touch.identifier;
+                joyOriginX = touch.clientX;
+                joyOriginY = touch.clientY;
+                showJoystick(touch.clientX, touch.clientY);
+                updateJoystick(touch.clientX, touch.clientY);
             }
         }
     }, { passive: false });
@@ -3117,32 +3186,27 @@ function initMobileControls() {
         if (gameState !== 'playing') return;
         for (let i = 0; i < e.changedTouches.length; i++) {
             const touch = e.changedTouches[i];
-            if (touch.identifier === moveTouchId) {
+            if (touch.identifier === joyTouchId) {
                 e.preventDefault();
-                const half = window.innerWidth / 2;
-                if (touch.clientX < half) {
-                    keys.left = true; keys.right = false;
-                } else {
-                    keys.right = true; keys.left = false;
-                }
+                updateJoystick(touch.clientX, touch.clientY);
             }
         }
     }, { passive: false });
 
     canvas.addEventListener('touchend', (e) => {
         for (let i = 0; i < e.changedTouches.length; i++) {
-            if (e.changedTouches[i].identifier === moveTouchId) {
-                moveTouchId = null;
-                keys.left = false; keys.right = false;
+            if (e.changedTouches[i].identifier === joyTouchId) {
+                joyTouchId = null;
+                hideJoystick();
             }
         }
     }, { passive: false });
 
     canvas.addEventListener('touchcancel', (e) => {
         for (let i = 0; i < e.changedTouches.length; i++) {
-            if (e.changedTouches[i].identifier === moveTouchId) {
-                moveTouchId = null;
-                keys.left = false; keys.right = false;
+            if (e.changedTouches[i].identifier === joyTouchId) {
+                joyTouchId = null;
+                hideJoystick();
             }
         }
     }, { passive: false });
@@ -3164,7 +3228,6 @@ function initMobileControls() {
         if (el.requestFullscreen) el.requestFullscreen();
         else if (el.webkitRequestFullscreen) el.webkitRequestFullscreen();
     }
-    // 첫 터치 시 풀스크린 시도
     document.addEventListener('touchstart', function onFirstTouch() {
         requestFullscreen();
         document.removeEventListener('touchstart', onFirstTouch);
