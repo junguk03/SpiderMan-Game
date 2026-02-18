@@ -1,23 +1,23 @@
 // ==================== GAME CONFIGURATION ====================
 const CONFIG = {
     gravity: 0.5,
-    mobileGravity: 0.25,
+    mobileGravity: 0.38,
     friction: 0.85,
     airResistance: 0.99,
-    mobileAirResistance: 0.96,
+    mobileAirResistance: 0.97,
     playerWidth: 20,
     playerHeight: 40,
     moveSpeed: 5,
     jumpForce: -13,
-    mobileJumpForce: -9,
+    mobileJumpForce: -11,
     wallSlideSpeed: 2,
     wallJumpForce: { x: 10, y: -11 },
-    mobileWallJumpForce: { x: 7, y: -7.5 },
+    mobileWallJumpForce: { x: 8, y: -9 },
     ropeSpeed: 30,
     swingForce: 0.35,
-    mobileSwingForce: 0.2,
+    mobileSwingForce: 0.3,
     swingDamping: 0.98,
-    mobileSwingDamping: 0.96,
+    mobileSwingDamping: 0.97,
     maxRopeLength: 350
 };
 
@@ -2327,8 +2327,8 @@ function updatePhysics() {
             if (player.onGround) {
                 player.vx = -speed;
             } else if (isMobile) {
-                player.vx += -speed * 0.08;
-                player.vx = Math.max(player.vx, -speed * 0.8);
+                player.vx += -speed * 0.15;
+                player.vx = Math.max(player.vx, -speed * 0.9);
             } else {
                 player.vx = -speed;
             }
@@ -2338,8 +2338,8 @@ function updatePhysics() {
             if (player.onGround) {
                 player.vx = speed;
             } else if (isMobile) {
-                player.vx += speed * 0.08;
-                player.vx = Math.min(player.vx, speed * 0.8);
+                player.vx += speed * 0.15;
+                player.vx = Math.min(player.vx, speed * 0.9);
             } else {
                 player.vx = speed;
             }
@@ -2962,21 +2962,20 @@ function drawTutorial() {
     }
 
     ctx.fillStyle = 'rgba(0, 0, 0, 0.7)';
-    const w = 450, h = 50;
-    ctx.fillRect(canvas.width / 2 - w / 2, 20, w, h);
+    const w = 400, h = 40;
+    const hintY = isMobile ? 60 : 20;
+    ctx.fillRect(canvas.width / 2 - w / 2, hintY, w, h);
     ctx.strokeStyle = '#667eea';
     ctx.lineWidth = 2;
-    ctx.strokeRect(canvas.width / 2 - w / 2, 20, w, h);
+    ctx.strokeRect(canvas.width / 2 - w / 2, hintY, w, h);
     ctx.fillStyle = '#fff';
-    ctx.font = '20px Segoe UI';
+    ctx.font = '16px Segoe UI';
     ctx.textAlign = 'center';
-    ctx.fillText(msg, canvas.width / 2, 52);
+    ctx.fillText(msg, canvas.width / 2, hintY + 26);
 }
 
 function drawButtonTutorial() {
-    // 모든 버튼이 눌렸는지 확인
     const allButtonsPressed = buttons.every(b => b.pressed);
-    // 모든 별이 활성화됐는지 확인
     const allStarsActive = stars.every(s => s.active);
 
     let msg = '';
@@ -2991,30 +2990,32 @@ function drawButtonTutorial() {
     }
 
     ctx.fillStyle = 'rgba(0, 0, 0, 0.7)';
-    const w = 450, h = 50;
-    ctx.fillRect(canvas.width / 2 - w / 2, 20, w, h);
+    const w = 400, h = 40;
+    const hintY = isMobile ? 60 : 20;
+    ctx.fillRect(canvas.width / 2 - w / 2, hintY, w, h);
     ctx.strokeStyle = '#e74c3c';
     ctx.lineWidth = 2;
-    ctx.strokeRect(canvas.width / 2 - w / 2, 20, w, h);
+    ctx.strokeRect(canvas.width / 2 - w / 2, hintY, w, h);
     ctx.fillStyle = '#fff';
-    ctx.font = '20px Segoe UI';
+    ctx.font = '16px Segoe UI';
     ctx.textAlign = 'center';
-    ctx.fillText(msg, canvas.width / 2, 52);
+    ctx.fillText(msg, canvas.width / 2, hintY + 26);
 }
 
 function drawHazardTutorial() {
     const msg = LEVELS[currentLevel]?.tutorial || '⚠️ 빨간 발판/벽에 닿으면 죽습니다!';
 
     ctx.fillStyle = 'rgba(0, 0, 0, 0.7)';
-    const w = 500, h = 50;
-    ctx.fillRect(canvas.width / 2 - w / 2, 20, w, h);
+    const w = 450, h = 40;
+    const hintY = isMobile ? 60 : 20;
+    ctx.fillRect(canvas.width / 2 - w / 2, hintY, w, h);
     ctx.strokeStyle = '#e74c3c';
     ctx.lineWidth = 2;
-    ctx.strokeRect(canvas.width / 2 - w / 2, 20, w, h);
+    ctx.strokeRect(canvas.width / 2 - w / 2, hintY, w, h);
     ctx.fillStyle = '#fff';
-    ctx.font = '18px Segoe UI';
+    ctx.font = '16px Segoe UI';
     ctx.textAlign = 'center';
-    ctx.fillText(msg, canvas.width / 2, 52);
+    ctx.fillText(msg, canvas.width / 2, hintY + 26);
 }
 
 // ==================== GAME STATE ====================
