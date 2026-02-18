@@ -3069,7 +3069,7 @@ function initMobileControls() {
     let lastActionMode = 'jump';
 
     function updateActionButton() {
-        const mode = player.onGround ? 'jump' : 'grapple';
+        const mode = (player.onGround || player.onWall !== 0) ? 'jump' : 'grapple';
         if (mode !== lastActionMode) {
             lastActionMode = mode;
             if (mode === 'jump') {
@@ -3090,7 +3090,7 @@ function initMobileControls() {
             e.preventDefault();
             e.stopPropagation();
             actionBtn.classList.add('active');
-            if (player.onGround) {
+            if (player.onGround || player.onWall !== 0) {
                 keys.jump = true;
             } else {
                 keys.grapple = true;
