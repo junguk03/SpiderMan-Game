@@ -1517,7 +1517,7 @@ function createLevels() {
 
     // ==================== TURRET LEVELS (40-49) ====================
 
-    // Level 40 - 터렛 소개 (간단한 좌우 발사)
+    // Level 40 - 터렛 소개 (간단한 좌우 발사 + 바닥 hazard)
     levels.push({
         name: 'Level 40',
         tutorial: '빨간 기계를 조심하세요! 주기적으로 발사합니다.',
@@ -1534,9 +1534,11 @@ function createLevels() {
             { x: 600, y: 200 },
             { x: 900, y: 200 }
         ],
-        hazards: [],
+        hazards: [
+            { x: 200, y: 395, w: 200, h: 20 }
+        ],
         turrets: [
-            { x: 350, y: 300, dir: 'right', interval: 150, speed: 2.5 }
+            { x: 350, y: 300, dir: 'right', interval: 90, speed: 3 }
         ],
         stars: [
             { x: 300, y: 300 },
@@ -1546,7 +1548,7 @@ function createLevels() {
         door: { x: 1200, y: 300 }
     });
 
-    // Level 41 - 아래로 발사하는 터렛
+    // Level 41 - 아래로 발사하는 터렛 + hazard 바닥 + 움직이는 발판
     levels.push({
         name: 'Level 41',
         spawn: { x: 50, y: 320 },
@@ -1564,10 +1566,16 @@ function createLevels() {
             { x: 780, y: 180 },
             { x: 1060, y: 180 }
         ],
-        hazards: [],
+        hazards: [
+            { x: 150, y: 395, w: 150, h: 20 },
+            { x: 720, y: 395, w: 180, h: 20 }
+        ],
+        movingPlatforms: [
+            { x: 420, y: 340, w: 80, h: 25, type: 'horizontal', range: 130, speed: 1.2 }
+        ],
         turrets: [
-            { x: 400, y: 100, dir: 'down', interval: 120, speed: 3 },
-            { x: 700, y: 100, dir: 'down', interval: 100, speed: 3 }
+            { x: 400, y: 100, dir: 'down', interval: 75, speed: 3.5 },
+            { x: 700, y: 100, dir: 'down', interval: 65, speed: 3.5 }
         ],
         stars: [
             { x: 360, y: 320 },
@@ -1577,7 +1585,7 @@ function createLevels() {
         door: { x: 1300, y: 300 }
     });
 
-    // Level 42 - 조준 터렛 (플레이어 추적)
+    // Level 42 - 조준 터렛 + hazard 벽 + 움직이는 발판
     levels.push({
         name: 'Level 42',
         spawn: { x: 50, y: 320 },
@@ -1593,9 +1601,16 @@ function createLevels() {
             { x: 500, y: 150 },
             { x: 800, y: 150 }
         ],
-        hazards: [],
+        hazards: [
+            { x: 150, y: 395, w: 200, h: 20 },
+            { x: 600, y: 200, w: 15, h: 80 }
+        ],
+        movingPlatforms: [
+            { x: 200, y: 340, w: 90, h: 25, type: 'horizontal', range: 100, speed: 1.3 },
+            { x: 750, y: 300, w: 80, h: 25, type: 'vertical', range: -60, speed: 1.0 }
+        ],
         turrets: [
-            { x: 550, y: 380, dir: 'aim', interval: 180, speed: 2 }
+            { x: 550, y: 380, dir: 'aim', interval: 110, speed: 2.5 }
         ],
         stars: [
             { x: 250, y: 280 },
@@ -1605,7 +1620,7 @@ function createLevels() {
         door: { x: 1050, y: 300 }
     });
 
-    // Level 43 - 터렛 + 위험 발판 콤보
+    // Level 43 - 터렛 + 위험 발판/벽 콤보 + 움직이는 발판
     levels.push({
         name: 'Level 43',
         spawn: { x: 50, y: 320 },
@@ -1627,11 +1642,17 @@ function createLevels() {
         ],
         hazards: [
             { x: 150, y: 395, w: 200, h: 20 },
-            { x: 450, y: 395, w: 200, h: 20 }
+            { x: 450, y: 395, w: 200, h: 20 },
+            { x: 750, y: 395, w: 150, h: 20 },
+            { x: 550, y: 230, w: 15, h: 100 }
+        ],
+        movingPlatforms: [
+            { x: 180, y: 350, w: 80, h: 25, type: 'horizontal', range: 120, speed: 1.5 },
+            { x: 1050, y: 280, w: 80, h: 25, type: 'vertical', range: -80, speed: 1.2 }
         ],
         turrets: [
-            { x: 300, y: 100, dir: 'down', interval: 130, speed: 2.5 },
-            { x: 700, y: 100, dir: 'down', interval: 110, speed: 3 }
+            { x: 300, y: 100, dir: 'down', interval: 80, speed: 3 },
+            { x: 700, y: 100, dir: 'down', interval: 70, speed: 3.5 }
         ],
         stars: [
             { x: 250, y: 300 },
@@ -1642,7 +1663,7 @@ function createLevels() {
         door: { x: 1350, y: 300 }
     });
 
-    // Level 44 - 좌우 터렛 통로
+    // Level 44 - 좌우 터렛 통로 + hazard 벽/바닥 + 움직이는 발판
     levels.push({
         name: 'Level 44',
         spawn: { x: 50, y: 320 },
@@ -1660,11 +1681,18 @@ function createLevels() {
             { x: 500, y: 100 },
             { x: 820, y: 200 }
         ],
-        hazards: [],
+        hazards: [
+            { x: 120, y: 395, w: 130, h: 20 },
+            { x: 490, y: 250, w: 20, h: 120 },
+            { x: 750, y: 395, w: 150, h: 20 }
+        ],
+        movingPlatforms: [
+            { x: 350, y: 330, w: 80, h: 25, type: 'horizontal', range: 150, speed: 1.8 }
+        ],
         turrets: [
-            { x: 270, y: 280, dir: 'right', interval: 100, speed: 3 },
-            { x: 730, y: 320, dir: 'left', interval: 100, speed: 3 },
-            { x: 500, y: 180, dir: 'down', interval: 140, speed: 2.5 }
+            { x: 270, y: 280, dir: 'right', interval: 65, speed: 3.5 },
+            { x: 730, y: 320, dir: 'left', interval: 65, speed: 3.5 },
+            { x: 500, y: 180, dir: 'down', interval: 85, speed: 3 }
         ],
         stars: [
             { x: 400, y: 310 },
@@ -1674,7 +1702,7 @@ function createLevels() {
         door: { x: 1000, y: 300 }
     });
 
-    // Level 45 - 움직이는 발판 + 터렛
+    // Level 45 - 움직이는 발판 + 터렛 + hazard 확대
     levels.push({
         name: 'Level 45',
         spawn: { x: 50, y: 320 },
@@ -1691,15 +1719,17 @@ function createLevels() {
             { x: 1050, y: 150 }
         ],
         hazards: [
-            { x: 150, y: 395, w: 550, h: 20 }
+            { x: 150, y: 395, w: 550, h: 20 },
+            { x: 800, y: 395, w: 400, h: 20 },
+            { x: 450, y: 200, w: 15, h: 80 }
         ],
         movingPlatforms: [
             { x: 200, y: 350, w: 100, h: 25, type: 'horizontal', range: 200, speed: 1.5 },
             { x: 850, y: 350, w: 100, h: 25, type: 'horizontal', range: 200, speed: 1.8 }
         ],
         turrets: [
-            { x: 400, y: 100, dir: 'down', interval: 120, speed: 3 },
-            { x: 900, y: 100, dir: 'aim', interval: 200, speed: 2 }
+            { x: 400, y: 100, dir: 'down', interval: 75, speed: 3.5 },
+            { x: 900, y: 100, dir: 'aim', interval: 120, speed: 2.5 }
         ],
         stars: [
             { x: 300, y: 280 },
@@ -1710,7 +1740,7 @@ function createLevels() {
         door: { x: 1300, y: 300 }
     });
 
-    // Level 46 - 버튼 + 터렛 (버튼 밟아야 별 활성화, 터렛 피하면서)
+    // Level 46 - 버튼 + 터렛 + hazard 벽/바닥 + 움직이는 발판
     levels.push({
         name: 'Level 46',
         isButtonLevel: true,
@@ -1728,11 +1758,18 @@ function createLevels() {
             { x: 900, y: 150 }
         ],
         hazards: [
-            { x: 150, y: 395, w: 250, h: 20 }
+            { x: 150, y: 395, w: 250, h: 20 },
+            { x: 500, y: 395, w: 250, h: 20 },
+            { x: 350, y: 220, w: 15, h: 100 },
+            { x: 700, y: 180, w: 15, h: 80 }
+        ],
+        movingPlatforms: [
+            { x: 200, y: 340, w: 90, h: 25, type: 'horizontal', range: 150, speed: 1.5 },
+            { x: 850, y: 300, w: 80, h: 25, type: 'vertical', range: -70, speed: 1.2 }
         ],
         turrets: [
-            { x: 600, y: 100, dir: 'down', interval: 130, speed: 2.5 },
-            { x: 350, y: 280, dir: 'right', interval: 150, speed: 2.5 }
+            { x: 600, y: 100, dir: 'down', interval: 80, speed: 3 },
+            { x: 350, y: 280, dir: 'right', interval: 90, speed: 3 }
         ],
         buttons: [
             { x: 780, y: 305, targetStarIndex: [0, 1] }
@@ -1745,9 +1782,10 @@ function createLevels() {
         door: { x: 1150, y: 300 }
     });
 
-    // Level 47 - 고속 연사 터렛 지대
+    // Level 47 - 고속 연사 터렛 + hazard 벽/바닥 + 버튼 + 움직이는 발판
     levels.push({
         name: 'Level 47',
+        isButtonLevel: true,
         spawn: { x: 50, y: 320 },
         platforms: [
             { x: 0, y: 370, w: 120, h: 30 },
@@ -1766,23 +1804,33 @@ function createLevels() {
         hazards: [
             { x: 120, y: 395, w: 180, h: 20 },
             { x: 380, y: 395, w: 170, h: 20 },
-            { x: 630, y: 395, w: 170, h: 20 }
+            { x: 630, y: 395, w: 170, h: 20 },
+            { x: 250, y: 230, w: 15, h: 90 },
+            { x: 500, y: 180, w: 15, h: 90 },
+            { x: 750, y: 230, w: 15, h: 90 }
+        ],
+        movingPlatforms: [
+            { x: 150, y: 340, w: 80, h: 25, type: 'horizontal', range: 100, speed: 2.0 },
+            { x: 600, y: 300, w: 70, h: 25, type: 'vertical', range: -80, speed: 1.5 }
         ],
         turrets: [
-            { x: 200, y: 80, dir: 'down', interval: 80, speed: 3.5 },
-            { x: 450, y: 80, dir: 'down', interval: 90, speed: 3.5 },
-            { x: 700, y: 80, dir: 'down', interval: 85, speed: 3.5 }
+            { x: 200, y: 80, dir: 'down', interval: 50, speed: 4 },
+            { x: 450, y: 80, dir: 'down', interval: 55, speed: 4 },
+            { x: 700, y: 80, dir: 'down', interval: 52, speed: 4 }
+        ],
+        buttons: [
+            { x: 1100, y: 355, targetStarIndex: [0, 1, 2] }
         ],
         stars: [
-            { x: 340, y: 260 },
-            { x: 590, y: 210 },
-            { x: 840, y: 260 },
+            { x: 340, y: 260, active: false },
+            { x: 590, y: 210, active: false },
+            { x: 840, y: 260, active: false },
             { x: 1100, y: 320 }
         ],
         door: { x: 1150, y: 300 }
     });
 
-    // Level 48 - 조준 터렛 + 움직이는 발판 + 위험지대
+    // Level 48 - 조준 터렛 + 움직이는 발판 + 대량 hazard
     levels.push({
         name: 'Level 48',
         spawn: { x: 50, y: 320 },
@@ -1804,16 +1852,20 @@ function createLevels() {
         ],
         hazards: [
             { x: 130, y: 395, w: 470, h: 20 },
-            { x: 700, y: 395, w: 350, h: 20 }
+            { x: 700, y: 395, w: 350, h: 20 },
+            { x: 1200, y: 395, w: 300, h: 20 },
+            { x: 350, y: 180, w: 15, h: 100 },
+            { x: 750, y: 150, w: 15, h: 100 },
+            { x: 1100, y: 180, w: 15, h: 100 }
         ],
         movingPlatforms: [
             { x: 250, y: 350, w: 100, h: 25, type: 'horizontal', range: 200, speed: 1.5 },
             { x: 850, y: 340, w: 80, h: 25, type: 'vertical', range: -100, speed: 1.2 }
         ],
         turrets: [
-            { x: 400, y: 80, dir: 'aim', interval: 160, speed: 2.5 },
-            { x: 900, y: 80, dir: 'aim', interval: 180, speed: 2.5 },
-            { x: 1250, y: 280, dir: 'left', interval: 120, speed: 3 }
+            { x: 400, y: 80, dir: 'aim', interval: 100, speed: 3 },
+            { x: 900, y: 80, dir: 'aim', interval: 110, speed: 3 },
+            { x: 1250, y: 280, dir: 'left', interval: 75, speed: 3.5 }
         ],
         stars: [
             { x: 300, y: 280 },
@@ -1825,9 +1877,10 @@ function createLevels() {
         door: { x: 1600, y: 300 }
     });
 
-    // Level 49 - 최종 터렛 도전 (모든 요소 조합)
+    // Level 49 - 최종 터렛 도전 (모든 요소 + 버튼 + 대량 hazard)
     levels.push({
         name: 'Level 49',
+        isButtonLevel: true,
         spawn: { x: 50, y: 320 },
         platforms: [
             { x: 0, y: 370, w: 120, h: 30 },
@@ -1853,7 +1906,12 @@ function createLevels() {
             { x: 120, y: 395, w: 380, h: 20 },
             { x: 580, y: 395, w: 420, h: 20 },
             { x: 1100, y: 395, w: 350, h: 20 },
-            { x: 1600, y: 395, w: 400, h: 20 }
+            { x: 1600, y: 395, w: 400, h: 20 },
+            { x: 400, y: 200, w: 15, h: 100 },
+            { x: 700, y: 150, w: 15, h: 100 },
+            { x: 1050, y: 130, w: 15, h: 100 },
+            { x: 1400, y: 100, w: 15, h: 100 },
+            { x: 1800, y: 150, w: 15, h: 100 }
         ],
         movingPlatforms: [
             { x: 200, y: 350, w: 100, h: 25, type: 'horizontal', range: 200, speed: 2.0 },
@@ -1862,16 +1920,19 @@ function createLevels() {
             { x: 1700, y: 300, w: 100, h: 25, type: 'vertical', range: -120, speed: 1.8 }
         ],
         turrets: [
-            { x: 350, y: 80, dir: 'down', interval: 100, speed: 3 },
-            { x: 750, y: 80, dir: 'aim', interval: 170, speed: 2.5 },
-            { x: 1150, y: 80, dir: 'down', interval: 90, speed: 3.5 },
-            { x: 1550, y: 80, dir: 'aim', interval: 150, speed: 2.5 },
-            { x: 1950, y: 200, dir: 'left', interval: 110, speed: 3 }
+            { x: 350, y: 80, dir: 'down', interval: 60, speed: 3.5 },
+            { x: 750, y: 80, dir: 'aim', interval: 100, speed: 3 },
+            { x: 1150, y: 80, dir: 'down', interval: 55, speed: 4 },
+            { x: 1550, y: 80, dir: 'aim', interval: 90, speed: 3 },
+            { x: 1950, y: 200, dir: 'left', interval: 65, speed: 3.5 }
+        ],
+        buttons: [
+            { x: 2080, y: 355, targetStarIndex: [0, 1, 2] }
         ],
         stars: [
-            { x: 300, y: 280 },
-            { x: 600, y: 230 },
-            { x: 900, y: 200 },
+            { x: 300, y: 280, active: false },
+            { x: 600, y: 230, active: false },
+            { x: 900, y: 200, active: false },
             { x: 1200, y: 180 },
             { x: 1550, y: 180 },
             { x: 2050, y: 320 }
