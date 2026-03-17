@@ -52,6 +52,7 @@ let grapple = {
 let platforms = [], walls = [], anchors = [], stars = [];
 let buttons = []; // 버튼 배열 추가
 let hazards = []; // 빨간 발판/벽 (닿으면 죽음)
+let bouncePads = []; // 튕기는 발판
 let movingPlatforms = []; // 움직이는 발판
 let turrets = []; // 터렛 (발사체 발사)
 let projectiles = []; // 터렛 발사체
@@ -1946,6 +1947,338 @@ function createLevels() {
         door: { x: 2130, y: 300 }
     });
 
+    // ==================== LEVELS 50-59: 튕기는 발판 ====================
+
+    // Level 50 - 튕기는 발판 입문 (앵커 없음, 간단)
+    levels.push({
+        name: 'Level 50',
+        spawn: { x: 50, y: 330 },
+        platforms: [
+            { x: 0, y: 370, w: 150, h: 30 },
+            { x: 500, y: 150, w: 200, h: 20 },
+            { x: 1000, y: 150, w: 200, h: 20 }
+        ],
+        walls: [],
+        anchors: [],
+        bouncePads: [
+            { x: 200, y: 355, w: 60, h: 15, force: -22 },
+            { x: 750, y: 135, w: 60, h: 15, force: -18 }
+        ],
+        stars: [
+            { x: 580, y: 100 },
+            { x: 1080, y: 100 }
+        ],
+        door: { x: 1120, y: 80 },
+        tutorial: '주황색 발판을 밟으면 위로 튕겨 올라갑니다!'
+    });
+
+    // Level 51 - 튕기는 발판 + 앵커 소량 (발판 사이에만)
+    levels.push({
+        name: 'Level 51',
+        spawn: { x: 50, y: 330 },
+        platforms: [
+            { x: 0, y: 370, w: 120, h: 30 },
+            { x: 350, y: 250, w: 100, h: 20 },
+            { x: 700, y: 370, w: 120, h: 30 },
+            { x: 1050, y: 200, w: 150, h: 20 }
+        ],
+        walls: [],
+        anchors: [
+            { x: 520, y: 180 }
+        ],
+        bouncePads: [
+            { x: 150, y: 355, w: 60, h: 15, force: -20 },
+            { x: 750, y: 355, w: 60, h: 15, force: -22 }
+        ],
+        stars: [
+            { x: 400, y: 200 },
+            { x: 1100, y: 150 }
+        ],
+        door: { x: 1120, y: 130 }
+    });
+
+    // Level 52 - 연속 튕기기
+    levels.push({
+        name: 'Level 52',
+        spawn: { x: 50, y: 330 },
+        platforms: [
+            { x: 0, y: 370, w: 120, h: 30 },
+            { x: 450, y: 280, w: 80, h: 20 },
+            { x: 850, y: 180, w: 80, h: 20 },
+            { x: 1250, y: 370, w: 150, h: 30 }
+        ],
+        walls: [],
+        anchors: [
+            { x: 650, y: 150 }
+        ],
+        bouncePads: [
+            { x: 180, y: 355, w: 60, h: 15, force: -20 },
+            { x: 480, y: 265, w: 60, h: 15, force: -22 },
+            { x: 880, y: 165, w: 60, h: 15, force: -18 }
+        ],
+        stars: [
+            { x: 500, y: 220 },
+            { x: 900, y: 120 },
+            { x: 1300, y: 320 }
+        ],
+        door: { x: 1320, y: 300 }
+    });
+
+    // Level 53 - 벽타기 + 튕기는 발판
+    levels.push({
+        name: 'Level 53',
+        spawn: { x: 50, y: 330 },
+        platforms: [
+            { x: 0, y: 370, w: 120, h: 30 },
+            { x: 400, y: 370, w: 100, h: 30 },
+            { x: 800, y: 250, w: 120, h: 20 },
+            { x: 1200, y: 150, w: 150, h: 20 }
+        ],
+        walls: [
+            { x: 600, y: 200, w: 20, h: 170 }
+        ],
+        anchors: [
+            { x: 1000, y: 130 }
+        ],
+        bouncePads: [
+            { x: 200, y: 355, w: 60, h: 15, force: -18 },
+            { x: 430, y: 355, w: 60, h: 15, force: -22 }
+        ],
+        stars: [
+            { x: 350, y: 280 },
+            { x: 850, y: 200 },
+            { x: 1270, y: 100 }
+        ],
+        door: { x: 1280, y: 80 }
+    });
+
+    // Level 54 - 높이 차이 큰 맵
+    levels.push({
+        name: 'Level 54',
+        spawn: { x: 50, y: 330 },
+        platforms: [
+            { x: 0, y: 370, w: 120, h: 30 },
+            { x: 350, y: 300, w: 100, h: 20 },
+            { x: 650, y: 370, w: 100, h: 30 },
+            { x: 1000, y: 200, w: 100, h: 20 },
+            { x: 1350, y: 100, w: 150, h: 20 }
+        ],
+        walls: [
+            { x: 850, y: 150, w: 20, h: 220 }
+        ],
+        anchors: [
+            { x: 500, y: 200 },
+            { x: 1180, y: 80 }
+        ],
+        bouncePads: [
+            { x: 160, y: 355, w: 60, h: 15, force: -18 },
+            { x: 680, y: 355, w: 60, h: 15, force: -24 }
+        ],
+        stars: [
+            { x: 400, y: 250 },
+            { x: 1050, y: 150 },
+            { x: 1400, y: 50 }
+        ],
+        door: { x: 1420, y: 30 }
+    });
+
+    // Level 55 - 튕기는 발판 + 버튼 추가
+    levels.push({
+        name: 'Level 55',
+        spawn: { x: 50, y: 330 },
+        isButtonLevel: true,
+        platforms: [
+            { x: 0, y: 370, w: 120, h: 30 },
+            { x: 350, y: 280, w: 100, h: 20 },
+            { x: 700, y: 370, w: 120, h: 30 },
+            { x: 1050, y: 200, w: 120, h: 20 },
+            { x: 1400, y: 370, w: 150, h: 30 }
+        ],
+        walls: [],
+        anchors: [
+            { x: 520, y: 180 },
+            { x: 900, y: 150 }
+        ],
+        bouncePads: [
+            { x: 170, y: 355, w: 60, h: 15, force: -20 },
+            { x: 730, y: 355, w: 60, h: 15, force: -22 }
+        ],
+        buttons: [
+            { x: 1080, y: 185, targetStarIndex: [0, 1] }
+        ],
+        stars: [
+            { x: 400, y: 230, active: false },
+            { x: 1450, y: 320, active: false }
+        ],
+        door: { x: 1470, y: 300 }
+    });
+
+    // Level 56 - 버튼 + 빨간 벽 소량
+    levels.push({
+        name: 'Level 56',
+        spawn: { x: 50, y: 330 },
+        isButtonLevel: true,
+        platforms: [
+            { x: 0, y: 370, w: 120, h: 30 },
+            { x: 400, y: 300, w: 100, h: 20 },
+            { x: 750, y: 370, w: 100, h: 30 },
+            { x: 1100, y: 230, w: 120, h: 20 },
+            { x: 1450, y: 370, w: 150, h: 30 }
+        ],
+        walls: [
+            { x: 600, y: 200, w: 20, h: 170 }
+        ],
+        anchors: [
+            { x: 550, y: 170 },
+            { x: 930, y: 150 }
+        ],
+        bouncePads: [
+            { x: 180, y: 355, w: 60, h: 15, force: -20 },
+            { x: 780, y: 355, w: 60, h: 15, force: -22 }
+        ],
+        hazards: [
+            { x: 650, y: 340, w: 80, h: 10 },
+            { x: 1300, y: 200, w: 10, h: 80 }
+        ],
+        buttons: [
+            { x: 1130, y: 215, targetStarIndex: [0] }
+        ],
+        stars: [
+            { x: 450, y: 250, active: false },
+            { x: 1480, y: 320 }
+        ],
+        door: { x: 1520, y: 300 }
+    });
+
+    // Level 57 - 터렛 추가
+    levels.push({
+        name: 'Level 57',
+        spawn: { x: 50, y: 330 },
+        platforms: [
+            { x: 0, y: 370, w: 120, h: 30 },
+            { x: 350, y: 280, w: 100, h: 20 },
+            { x: 700, y: 370, w: 100, h: 30 },
+            { x: 1050, y: 220, w: 120, h: 20 },
+            { x: 1400, y: 370, w: 150, h: 30 }
+        ],
+        walls: [
+            { x: 550, y: 180, w: 20, h: 190 }
+        ],
+        anchors: [
+            { x: 480, y: 150 },
+            { x: 880, y: 140 }
+        ],
+        bouncePads: [
+            { x: 170, y: 355, w: 60, h: 15, force: -20 },
+            { x: 730, y: 355, w: 60, h: 15, force: -22 }
+        ],
+        hazards: [
+            { x: 630, y: 340, w: 60, h: 10 }
+        ],
+        turrets: [
+            { x: 1200, y: 180, dir: 'left', interval: 100, speed: 3 }
+        ],
+        stars: [
+            { x: 400, y: 230 },
+            { x: 1100, y: 170 },
+            { x: 1450, y: 320 }
+        ],
+        door: { x: 1470, y: 300 },
+        tutorial: '빨간 기계를 조심하세요!'
+    });
+
+    // Level 58 - 움직이는 발판 추가 (겹치지 않게)
+    levels.push({
+        name: 'Level 58',
+        spawn: { x: 50, y: 330 },
+        platforms: [
+            { x: 0, y: 370, w: 120, h: 30 },
+            { x: 400, y: 370, w: 100, h: 30 },
+            { x: 900, y: 250, w: 100, h: 20 },
+            { x: 1400, y: 370, w: 150, h: 30 }
+        ],
+        walls: [
+            { x: 650, y: 180, w: 20, h: 190 }
+        ],
+        anchors: [
+            { x: 550, y: 150 },
+            { x: 1150, y: 120 }
+        ],
+        bouncePads: [
+            { x: 170, y: 355, w: 60, h: 15, force: -18 },
+            { x: 430, y: 355, w: 60, h: 15, force: -22 }
+        ],
+        movingPlatforms: [
+            { x: 1100, y: 300, w: 80, h: 15, type: 'vertical', range: 120, speed: 1 }
+        ],
+        hazards: [
+            { x: 750, y: 340, w: 60, h: 10 }
+        ],
+        turrets: [
+            { x: 1300, y: 200, dir: 'left', interval: 110, speed: 3 }
+        ],
+        stars: [
+            { x: 550, y: 280 },
+            { x: 950, y: 200 },
+            { x: 1450, y: 320 }
+        ],
+        door: { x: 1470, y: 300 }
+    });
+
+    // Level 59 - 최종 도전 (큰 맵, 모든 요소)
+    levels.push({
+        name: 'Level 59',
+        spawn: { x: 50, y: 330 },
+        isButtonLevel: true,
+        platforms: [
+            { x: 0, y: 370, w: 120, h: 30 },
+            { x: 400, y: 370, w: 100, h: 30 },
+            { x: 800, y: 300, w: 100, h: 20 },
+            { x: 1200, y: 370, w: 100, h: 30 },
+            { x: 1600, y: 250, w: 100, h: 20 },
+            { x: 2000, y: 370, w: 100, h: 30 },
+            { x: 2400, y: 150, w: 120, h: 20 },
+            { x: 2800, y: 370, w: 150, h: 30 }
+        ],
+        walls: [
+            { x: 600, y: 180, w: 20, h: 190 },
+            { x: 1850, y: 150, w: 20, h: 220 }
+        ],
+        anchors: [
+            { x: 550, y: 150 },
+            { x: 1000, y: 160 },
+            { x: 1750, y: 130 },
+            { x: 2200, y: 100 },
+            { x: 2600, y: 120 }
+        ],
+        bouncePads: [
+            { x: 170, y: 355, w: 60, h: 15, force: -20 },
+            { x: 430, y: 355, w: 60, h: 15, force: -22 },
+            { x: 1230, y: 355, w: 60, h: 15, force: -24 },
+            { x: 2030, y: 355, w: 60, h: 15, force: -22 }
+        ],
+        movingPlatforms: [
+            { x: 2100, y: 300, w: 80, h: 15, type: 'vertical', range: 130, speed: 1.2 }
+        ],
+        hazards: [
+            { x: 1400, y: 340, w: 50, h: 10 },
+            { x: 2300, y: 200, w: 10, h: 60 }
+        ],
+        turrets: [
+            { x: 1100, y: 200, dir: 'aim', interval: 90, speed: 2.5 },
+            { x: 2650, y: 180, dir: 'aim', interval: 100, speed: 2.5 }
+        ],
+        buttons: [
+            { x: 2430, y: 135, targetStarIndex: [0, 1, 2] }
+        ],
+        stars: [
+            { x: 850, y: 250, active: false },
+            { x: 1650, y: 200, active: false },
+            { x: 2850, y: 320, active: false }
+        ],
+        door: { x: 2880, y: 300 }
+    });
+
     return levels;
 }
 
@@ -2139,6 +2472,17 @@ function loadLevel(num) {
         }));
     } else {
         hazards = [];
+    }
+
+    // 튕기는 발판 로드
+    if (level.bouncePads) {
+        bouncePads = level.bouncePads.map(bp => ({
+            ...bp,
+            y: bp.y + yOffset,
+            animTimer: 0
+        }));
+    } else {
+        bouncePads = [];
     }
 
     // 움직이는 발판 로드
@@ -2387,8 +2731,26 @@ function updatePhysics() {
             player.onGround = false;
             tutorialActions.jumped = true;
         } else if (player.onWall !== 0) {
-            player.vx = wjForce.x * -player.onWall;
-            player.vy = wjForce.y;
+            // 벽 꼭대기 근처인지 확인
+            let nearTop = false;
+            for (const wall of walls) {
+                if (player.y + player.height > wall.y && player.y < wall.y + wall.h) {
+                    // 플레이어 머리가 벽 꼭대기에서 30px 이내
+                    if (player.y - wall.y < 30) {
+                        nearTop = true;
+                        break;
+                    }
+                }
+            }
+            if (nearTop) {
+                // 벽 꼭대기: 위로 올라가는 점프 (약하게 밀림)
+                player.vx = wjForce.x * 0.3 * -player.onWall;
+                player.vy = jForce;
+            } else {
+                // 일반 벽점프: 반대쪽으로 튕김
+                player.vx = wjForce.x * -player.onWall;
+                player.vy = wjForce.y;
+            }
             player.wallJumpCooldown = 10;
             player.facingRight = player.onWall < 0;
             tutorialActions.wallJumped = true;
@@ -2535,6 +2897,22 @@ function checkCollisions() {
         }
     }
 
+    // 튕기는 발판 충돌
+    for (const bp of bouncePads) {
+        if (player.x + player.width > bp.x && player.x < bp.x + bp.w) {
+            if (player.vy >= 0 && player.y + player.height > bp.y && player.y + player.height < bp.y + bp.h + 10) {
+                player.y = bp.y - player.height;
+                const bounceForce = bp.force || -20;
+                player.vy = isMobile ? bounceForce * 0.8 : bounceForce;
+                bp.animTimer = 15; // 튕기는 애니메이션
+                if (grapple.attached) {
+                    grapple.active = false;
+                    grapple.attached = false;
+                }
+            }
+        }
+    }
+
     // 움직이는 발판 충돌
     for (const mp of movingPlatforms) {
         if (player.x + player.width > mp.x && player.x < mp.x + mp.w) {
@@ -2639,6 +3017,25 @@ function render() {
         ctx.strokeStyle = '#2a6aaa';
         ctx.lineWidth = 1;
         ctx.strokeRect(mp.x, mp.y, mp.w, mp.h);
+        ctx.restore();
+    }
+
+    // 튕기는 발판
+    for (const bp of bouncePads) {
+        ctx.save();
+        const squish = bp.animTimer > 0 ? Math.sin(bp.animTimer * 0.4) * 3 : 0;
+        if (bp.animTimer > 0) bp.animTimer--;
+        ctx.shadowColor = '#ffaa00';
+        ctx.shadowBlur = 10;
+        ctx.fillStyle = '#ff8c00';
+        ctx.fillRect(bp.x, bp.y + squish, bp.w, bp.h - squish);
+        ctx.fillStyle = '#ffb347';
+        ctx.fillRect(bp.x, bp.y + squish, bp.w, 4);
+        // 화살표 표시 (위를 가리킴)
+        ctx.fillStyle = '#fff';
+        ctx.font = '14px sans-serif';
+        ctx.textAlign = 'center';
+        ctx.fillText('▲', bp.x + bp.w / 2, bp.y + squish + bp.h / 2 + 5);
         ctx.restore();
     }
 
